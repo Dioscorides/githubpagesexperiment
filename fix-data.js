@@ -1,23 +1,32 @@
 const fs = require('fs');
-// Load the current data
-const rawData = fs.readFileSync('./data.json');
-const data = JSON.parse(rawData);
+const data = JSON.parse(fs.readFileSync('./data.json'));
 
-// Map through and force types
-const fixedData = data.map(item => {
-    // 1. Convert Integers (0/1) to Booleans (false/true)
-    // The '!!' operator converts a value to its boolean equivalent
-    if (item.iiif !== undefined) item.iiif = !!+item.iiif; 
-    if (item.is_free_cultural_works_license !== undefined) item.is_free_cultural_works_license = !!+item.is_free_cultural_works_license;
-    if (item.is_disabled !== undefined) item.is_disabled = !!+item.is_disabled;
+const fixed = data.map(i => {
+    // 1. Fix Booleans
+    if (i.iiif !== undefined) i.iiif = !!+i.iiif;
+    if (i.is_free_cultural_works_license !== undefined) i.is_free_cultural_works_license = !!+i.is_free_cultural_works_license;
+    if (i.is_disabled !== undefined) i.is_disabled = !!+i.is_disabled;
     
-    // 2. Ensure Lat/Lng are strings (schema requirement)
-    if (item.lat !== null && item.lat !== undefined) item.lat = String(item.lat);
-    if (item.lng !== null && item.lng !== undefined) item.lng = String(item.lng);
+    // 2. Fix Coordinates
+    if (i.lat) i.lat = String(i.lat);
+    if (i.lng) i.lng = String(i.lng);
 
-    return item;
+    // 3. Fix Quantity (Standardize to Few / Dozens / Hundreds / Thousands)
+    if (i.quantity) {
+        const q = i.quantity.toLowerCase();
+        
+        if (q.includes('few')) i.quantity = 'Few';              // < 24
+        else if (q.includes('many')) i.quantity = 'Dozens';     // 24 - 99
+        else if (q.includes('huge')) i.quantity = 'Thousands';  // Merged into Thousands
+        else if (q.includes('hundreds')) i.quantity = 'Hundreds';
+        else if (q.includes('thousands')) i.quantity = 'Thousands';
+        else i.quantity = 'Unknown';
+    } else {
+        i.quantity = 'Unknown';
+    }
+
+    return i;
 });
 
-// Save back to data.json with pretty printing
-fs.writeFileSync('./data.json', JSON.stringify(fixedData, null, 4));
-console.log('✅ Data scrubbed: Converted 0/1 to true/false.');
+fs.writeFileSync('./data.json', JSON.stringify(fixed, null, 4));
+console.log('✅ Data scrubbed: Quantities standardized to Dozens/Hundreds/Thousands.');

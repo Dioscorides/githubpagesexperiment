@@ -9,13 +9,13 @@
       "nation": { "type": "string" },
       "city": { "type": "string" },
       "website": { "type": "string", "format": "uri" },
-      "lat": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
-      "lng": { "type": "string", "pattern": "^-?\\d+(\\.\\d+)?$" },
+      "lat": { "type": "string" },
+      "lng": { "type": "string" },
       "iiif": { "type": "boolean" },
       "is_free_cultural_works_license": { "type": "boolean" },
       "quantity": { 
         "type": "string", 
-        "enum": ["Low", "Medium", "High", "Unknown", "Hundreds", "Thousands"] 
+        "enum": ["Few", "Dozens", "Hundreds", "Thousands", "Unknown"] 
       }
     }
   }
