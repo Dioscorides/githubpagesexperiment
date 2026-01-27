@@ -1,13 +1,10 @@
 name: Data Guardrails
 
 on:
-  # Trigger on PRs (Automatic)
   pull_request:
     paths:
       - 'data.json'
-  
-  # Trigger manually (Button)
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   validate-data:
@@ -21,10 +18,13 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install Validator
-        run: npm install -g ajv-cli
+      - name: Install Validator & Formats
+        run: npm install -g ajv-cli ajv-formats
 
       - name: Validate JSON Syntax & Schema
         run: |
+          # 1. Check strict JSON syntax
           cat data.json | python3 -m json.tool > /dev/null
-          ajv validate -s schema.json -d data.json
+          
+          # 2. Validate against Schema (with URI format support)
+          ajv validate -s schema.json -d data.json -c ajv-formats
