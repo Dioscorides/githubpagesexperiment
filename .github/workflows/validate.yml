@@ -1,9 +1,13 @@
 name: Data Guardrails
 
 on:
+  # Trigger on PRs (Automatic)
   pull_request:
     paths:
       - 'data.json'
+  
+  # Trigger manually (Button)
+  workflow_dispatch: 
 
 jobs:
   validate-data:
@@ -22,8 +26,5 @@ jobs:
 
       - name: Validate JSON Syntax & Schema
         run: |
-          # 1. Check if it is valid JSON
           cat data.json | python3 -m json.tool > /dev/null
-          
-          # 2. Check if it matches our Schema rules
           ajv validate -s schema.json -d data.json
