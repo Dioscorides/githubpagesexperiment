@@ -1,0 +1,29 @@
+name: Data Guardrails
+
+on:
+  pull_request:
+    paths:
+      - 'data.json'
+
+jobs:
+  validate-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Validator
+        run: npm install -g ajv-cli
+
+      - name: Validate JSON Syntax & Schema
+        run: |
+          # 1. Check if it is valid JSON
+          cat data.json | python3 -m json.tool > /dev/null
+          
+          # 2. Check if it matches our Schema rules
+          ajv validate -s schema.json -d data.json
