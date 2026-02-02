@@ -291,9 +291,10 @@ body {
 
 .input-group {
     display: flex;
-    box-shadow: var(--md-shadow-z1);
+    box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,.05);
     border-radius: 0.25rem;
     overflow: hidden;
+    width: 100%;
 }
 
 .input-group-text {
@@ -307,14 +308,23 @@ body {
 
 .input-group .form-control {
     border-left: none;
+    flex: 1;
+    width: 100%;
+    min-width: 0;
 }
 
 /* Button Group */
 .btn-group {
     display: flex;
-    box-shadow: var(--md-shadow-z1);
+    box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,.05);
     border-radius: 0.25rem;
     overflow: hidden;
+    width: 100%;
+}
+
+.btn-group .btn {
+    flex: 1;
+    border-radius: 0;
 }
 
 .btn-check {
@@ -447,6 +457,24 @@ body {
 
 .table-responsive {
     overflow-x: auto;
+}
+
+/* Table column widths */
+.col-library {
+    width: 40%;
+}
+
+.col-location {
+    width: 20%;
+}
+
+.col-features {
+    width: 25%;
+}
+
+.col-access {
+    width: 15%;
+    text-align: right;
 }
 
 /* Responsive */

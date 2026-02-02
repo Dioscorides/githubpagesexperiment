@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DMMapp Library Directory - A curated database of digitized medieval manuscript libraries worldwide with IIIF support and open access resources.">
     <title>DMMapp Library Directory</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
@@ -11,15 +12,15 @@
 </head>
 <body>
 
-    <div id="loader">
-        <div class="spinner-border text-primary mb-3" role="status"></div>
+    <div id="loader" aria-label="Loading library directory" role="status">
+        <div class="spinner-border text-primary mb-3" role="status" aria-hidden="true"></div>
         <p class="text-muted">Loading Directory...</p>
     </div>
 
-    <nav class="navbar sticky-top">
+    <nav class="navbar sticky-top" aria-label="Primary navigation">
         <div class="container">
-            <a class="navbar-brand" href="/">
-                <i class="bi bi-journal-bookmark-fill"></i>DMMapp Library Directory
+            <a class="navbar-brand" href="/" aria-label="DMMapp Library Directory home">
+                <i class="bi bi-journal-bookmark-fill" aria-hidden="true"></i>DMMapp Database
             </a>
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -65,7 +66,7 @@
                                 <i class="bi bi-images"></i>
                             </div>
                             <h3 id="statIIIF">0</h3>
-                            <small>IIIF Ready</small>
+                            <small>IIIF Repositories</small>
                         </div>
                     </div>
                 </div>
@@ -100,10 +101,10 @@
                 <table class="table table-hover mb-0" id="libraryTable">
                     <thead>
                         <tr>
-                            <th style="width: 40%;">Library</th>
-                            <th style="width: 20%;">Location</th>
-                            <th style="width: 25%;">Features</th>
-                            <th style="width: 15%; text-align: right;">Access</th>
+                            <th class="col-library">Library</th>
+                            <th class="col-location">Location</th>
+                            <th class="col-features">Features</th>
+                            <th class="col-access">Access</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
