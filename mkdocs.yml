@@ -21,7 +21,7 @@ nav:
   - Home: index.md
   - About: about.md
   - Contributing: contributing.md
-  - Back to App: ../index.html
+  - Back to App: https://dioscorides.github.io/githubpagesexperiment/
 
 markdown_extensions:
   - admonition
