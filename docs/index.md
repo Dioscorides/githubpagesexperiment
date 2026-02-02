@@ -27,7 +27,7 @@ View real-time statistics including:
 
 ## Getting Started
 
-1. Visit the [Dashboard](../index.html) to explore the library directory
+1. Visit the [Dashboard](/index.html) to explore the library directory
 2. Use the search and filter tools to find specific collections
 3. Click "Visit" to access each library's digitized manuscripts
 
