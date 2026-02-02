@@ -58,6 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const fragment = document.createDocumentFragment();
 
         data.forEach(item => {
+            const row = document.createElement('tr');
+            
             // Logic for Badges
             let badges = '';
             if (item.iiif === true) {
