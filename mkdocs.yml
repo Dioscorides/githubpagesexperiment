@@ -1,0 +1,40 @@
+site_name: DMMapp Library Directory
+site_description: A directory of digitized manuscript libraries worldwide
+site_url: https://dioscorides.github.io/githubpagesexperiment/
+
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: indigo
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+
+nav:
+  - Home: index.md
+  - About: about.md
+  - Contributing: contributing.md
+  - Back to App: ../index.html
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Dioscorides/githubpagesexperiment

@@ -58,26 +58,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const fragment = document.createDocumentFragment();
 
         data.forEach(item => {
-            // Skip disabled items if your logic requires it
-            if (item.is_disabled == 1) return;
-
-            const row = document.createElement('tr');
-            
-            // Logic for Badges (handling 1/0 integers)
+            // Logic for Badges
             let badges = '';
-            if (item.iiif == 1) {
+            if (item.iiif === true) {
                 badges += `<span class="badge badge-feature bg-iiif me-1" title="International Image Interoperability Framework"><i class="bi bi-images me-1"></i>IIIF</span>`;
             }
-            if (item.is_free_cultural_works_license == 1) {
+            if (item.is_free_cultural_works_license === true) {
                 badges += `<span class="badge badge-feature bg-free" title="Free Cultural Works License"><i class="bi bi-unlock me-1"></i>Open</span>`;
             }
             if (!badges) {
                 badges = `<span class="text-muted small fst-italic">Standard Access</span>`;
             }
 
-            // Note: Website handling
+            // Website handling
             const websiteBtn = item.website 
-                ? `<a href="${item.website}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3">Visit <i class="bi bi-arrow-right-short"></i></a>`
+                ? `<a href="${item.website}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill">Visit <i class="bi bi-arrow-right-short"></i></a>`
                 : `<span class="text-muted small">No URL</span>`;
 
             row.innerHTML = `
@@ -101,22 +96,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Stats Logic
     function updateStats(data) {
         // Calculate Total Active Libraries
-        const activeLibs = data.filter(i => i.is_disabled == 0);
-        statTotal.innerText = activeLibs.length;
+        statTotal.innerText = data.length;
 
         // Calculate Unique Nations
-        const uniqueNations = new Set(activeLibs.map(item => item.nation));
+        const uniqueNations = new Set(data.map(item => item.nation));
         statNations.innerText = uniqueNations.size;
 
         // Calculate IIIF Count
-        const iiifCount = activeLibs.filter(item => item.iiif == 1).length;
+        const iiifCount = data.filter(item => item.iiif === true).length;
         statIIIF.innerText = iiifCount;
     }
 
     // 4. Populate Dropdown
     function populateNationFilter() {
         // Extract unique nations, sort them
-        const nations = [...new Set(allData.filter(i => i.is_disabled == 0).map(item => item.nation))].sort();
+        const nations = [...new Set(allData.map(item => item.nation))].sort();
         
         nations.forEach(nation => {
             const option = document.createElement('option');
@@ -134,8 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const requireFree = freeCheck.checked;
 
         const filtered = allData.filter(item => {
-            if (item.is_disabled == 1) return false;
-
             // Search Text
             const matchesSearch = (item.library && item.library.toLowerCase().includes(term)) || 
                                   (item.city && item.city.toLowerCase().includes(term));
@@ -143,9 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Nation Filter
             const matchesNation = selectedNation === 'All' || item.nation === selectedNation;
 
-            // Checkbox Filters (using == 1 for loose equality with string/int)
-            const matchesIIIF = !requireIIIF || item.iiif == 1;
-            const matchesFree = !requireFree || item.is_free_cultural_works_license == 1;
+            // Checkbox Filters
+            const matchesIIIF = !requireIIIF || item.iiif === true;
+            const matchesFree = !requireFree || item.is_free_cultural_works_license === true;
 
             return matchesSearch && matchesNation && matchesIIIF && matchesFree;
         });
