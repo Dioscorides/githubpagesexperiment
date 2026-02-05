@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     let allData = [];
     const loader = document.getElementById('loader');
-    
+
     // UI Elements
     const tableBody = document.getElementById('tableBody');
     const emptyState = document.getElementById('emptyState');
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const iiifCheck = document.getElementById('iiifCheck');
     const freeCheck = document.getElementById('freeCheck');
     const clearFiltersBtn = document.getElementById('clearFilters');
-    
+
     // Stats Elements
     const statTotal = document.getElementById('statTotal');
     const statNations = document.getElementById('statNations');
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             // Sort alphabetically by Library Name initially
             allData = data.sort((a, b) => a.library.localeCompare(b.library));
-            
+
             initializeDashboard();
             loader.style.opacity = '0';
             setTimeout(() => loader.remove(), 500); // Smooth fade out
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Render Table
     function renderTable(data) {
         tableBody.innerHTML = '';
-        
+
         if (data.length === 0) {
             tableBody.parentElement.classList.add('d-none'); // Hide table
             emptyState.classList.remove('d-none');
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         data.forEach(item => {
             const row = document.createElement('tr');
-            
+
             // Logic for Badges
             let badges = '';
             if (item.iiif === true) {
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Website handling
-            const websiteBtn = item.website 
+            const websiteBtn = item.website
                 ? `<a href="${item.website}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill">Visit <i class="bi bi-arrow-right-short"></i></a>`
                 : `<span class="text-muted small">No URL</span>`;
 
@@ -105,15 +105,14 @@ document.addEventListener('DOMContentLoaded', () => {
         statNations.innerText = uniqueNations.size;
 
         // Calculate IIIF Count
-        const iiifCount = data.filter(item => item.iiif === true).length;
-        statIIIF.innerText = iiifCount;
+        statIIIF.innerText = data.filter(item => item.iiif === true).length;
     }
 
     // 4. Populate Dropdown
     function populateNationFilter() {
         // Extract unique nations, sort them
         const nations = [...new Set(allData.map(item => item.nation))].sort();
-        
+
         nations.forEach(nation => {
             const option = document.createElement('option');
             option.value = nation;
@@ -124,16 +123,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 5. Filter Engine
     function filterData() {
-        const term = searchInput.value.toLowerCase();
+        const term = searchInput.value.toLowerCase().trim();
         const selectedNation = nationSelect.value;
         const requireIIIF = iiifCheck.checked;
         const requireFree = freeCheck.checked;
 
         const filtered = allData.filter(item => {
-            // Search Text
-            const matchesSearch = (item.library && item.library.toLowerCase().includes(term)) || 
-                                  (item.city && item.city.toLowerCase().includes(term));
-            
+            // Search Text - include nation in search, handle empty search
+            const matchesSearch = !term ||
+                (item.library && item.library.toLowerCase().includes(term)) ||
+                (item.city && item.city.toLowerCase().includes(term)) ||
+                (item.nation && item.nation.toLowerCase().includes(term));
+
             // Nation Filter
             const matchesNation = selectedNation === 'All' || item.nation === selectedNation;
 
@@ -145,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         renderTable(filtered);
+        updateStats(filtered); // Update stats with filtered data
     }
 
     // Event Listeners
@@ -152,8 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
     nationSelect.addEventListener('change', filterData);
     iiifCheck.addEventListener('change', filterData);
     freeCheck.addEventListener('change', filterData);
-    
-    if(clearFiltersBtn) {
+
+    if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener('click', () => {
             searchInput.value = '';
             nationSelect.value = 'All';
