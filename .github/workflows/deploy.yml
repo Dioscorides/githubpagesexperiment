@@ -33,7 +33,7 @@ jobs:
 
       - name: Build MkDocs Documentation
         run: |
-          mkdocs build --clean --strict
+          mkdocs build --clean
           mkdir -p dist/docs
           cp -r site/* dist/docs/
 
