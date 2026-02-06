@@ -1,5 +1,28 @@
+// Theme Toggle - Matches MkDocs Material behavior
+(function initTheme() {
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // Set initial theme: saved preference > system preference > light
+    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', initialTheme);
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    }
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
     let allData = [];
+    let sortColumn = null;
+    let sortDirection = 'asc';
     const loader = document.getElementById('loader');
 
     // UI Elements
@@ -39,6 +62,64 @@ document.addEventListener('DOMContentLoaded', () => {
         populateNationFilter();
         updateStats(allData);
         renderTable(allData);
+        initializeSorting();
+    }
+
+    // Sorting functionality
+    function initializeSorting() {
+        const sortableHeaders = document.querySelectorAll('.sortable');
+        sortableHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const column = header.getAttribute('data-sort');
+                handleSort(column, header);
+            });
+        });
+    }
+
+    function handleSort(column, headerElement) {
+        // Toggle sort direction if clicking the same column
+        if (sortColumn === column) {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortColumn = column;
+            sortDirection = 'asc';
+        }
+
+        // Update all header states
+        document.querySelectorAll('.sortable').forEach(header => {
+            header.classList.remove('active');
+            header.removeAttribute('data-sort-direction');
+        });
+
+        // Mark active header
+        headerElement.classList.add('active');
+        headerElement.setAttribute('data-sort-direction', sortDirection);
+
+        // Sort the data
+        sortData();
+
+        // Re-apply filters and render
+        filterData();
+    }
+
+    function sortData() {
+        allData.sort((a, b) => {
+            let valA = a[sortColumn];
+            let valB = b[sortColumn];
+
+            // Handle null/undefined values
+            if (valA == null) valA = '';
+            if (valB == null) valB = '';
+
+            // Convert to lowercase for case-insensitive sorting
+            if (typeof valA === 'string') valA = valA.toLowerCase();
+            if (typeof valB === 'string') valB = valB.toLowerCase();
+
+            // Compare values
+            if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+            if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
     }
 
     // 2. Render Table
