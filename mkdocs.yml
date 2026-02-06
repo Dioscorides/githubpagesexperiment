@@ -50,6 +50,9 @@ markdown_extensions:
 nav:
   - Home: index.md
   - About: about.md
+  - Schema: schema.md
+  - 'Update Data': update-data.md
+  - 'Workflow Validation': workflow-validation.md
   - 'Contributing': contributing.md
   - 'Back to Dashboard': ../index.html  # <--- Back to the DMMapp Dashboard
 plugins:
