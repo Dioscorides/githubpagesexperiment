@@ -53,6 +53,7 @@ nav:
   - Schema: schema.md
   - 'Update Data': update-data.md
   - 'Workflow Validation': workflow-validation.md
+  - 'Link Health Check': workflow-link-checking.md
   - 'Contributing': contributing.md
   - 'Back to Dashboard': ../index.html  # <--- Back to the DMMapp Dashboard
 plugins:
