@@ -420,10 +420,10 @@ If validation fails and you cannot determine the cause:
 2. Validate `data.json` locally using the same commands
 3. Check `SCHEMA.md` for field requirements
 4. Consult the schema.json file for exact specifications
-5. Run `fix-data.js` to auto-correct common issues
+5. Run `fix-data.js` to autocorrect common issues
 
 ---
 
-**Last Updated**: February 6, 2026  
+**Last Updated**: February 6, 2026
 **Workflow Version**: 1.0  
 **Maintained By**: DMMapp Contributors
