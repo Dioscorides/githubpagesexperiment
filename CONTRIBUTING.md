@@ -12,5 +12,5 @@ Thanks for helping us map the world's manuscripts! We manage this data as a simp
 
 ## Pull Request Process
 - Create a new branch for your changes.
-- Submit a Pull Request (PR) to the `main` branch.
+- Submit a Pull Request (PR) to the `master` branch.
 - **Wait for Checks**: Our robot will automatically check your JSON syntax. If it fails, please fix the errors shown in the "Checks" tab.
