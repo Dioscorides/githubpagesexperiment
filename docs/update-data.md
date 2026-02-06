@@ -196,12 +196,12 @@ GitHub displays error messages indicating what's wrong:
 
 **Common validation errors:**
 
-| Error | Fix |
-|-------|-----|
-| `Invalid JSON` | Check each field—every field before the last needs a comma |
-| `Invalid URI format` | Ensure URL starts with `http://` or `https://` |
-| `Missing required property` | Add library, nation, city, and website to every entry |
-| `Invalid enum value` | Use only "Few", "Dozens", "Hundreds", "Thousands", or "Unknown" |
+| Error                       | Fix                                                             |
+|-----------------------------|-----------------------------------------------------------------|
+| `Invalid JSON`              | Check each field—every field before the last needs a comma      |
+| `Invalid URI format`        | Ensure URL starts with `http://` or `https://`                  |
+| `Missing required property` | Add library, nation, city, and website to every entry           |
+| `Invalid enum value`        | Use only "Few", "Dozens", "Hundreds", "Thousands", or "Unknown" |
 
 ### Follow up on pending reviews
 
