@@ -1,243 +1,228 @@
-# 📚 DMMapp Library Directory
+# 📚 DMMapp library directory
 
-> A curated, interactive directory of digitized medieval manuscript libraries worldwide with IIIF support and open access resources.
+> A curated, interactive directory of digitized medieval manuscript libraries worldwide with support for standardized image formats and open access resources.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Pages](https://img.shields.io/badge/Hosted%20on-GitHub%20Pages-green)](https://dioscorides.github.io/githubpagesexperiment/)
 [![JSON Schema Validation](https://img.shields.io/badge/Data%20Format-JSON%20Schema-blue)](./schema.json)
 
-## 🎯 Overview
+## What you can do
 
-DMMapp (Digitized Medieval Manuscripts Application) is an open-source project that helps researchers, historians, and enthusiasts discover and access digitized medieval manuscript collections from around the world.
+Use DMMapp (Digitized Medieval Manuscripts Application) to discover and access digitized medieval manuscript collections from around the world. Instead of visiting dozens of institutional websites, you can search a single directory that gives you:
 
-Instead of scattered across dozens of institutional websites, DMMapp provides a **single, searchable directory** with:
 - 🔍 Advanced filtering and search capabilities
 - 🌍 Global coverage with location-based discovery
 - 📋 Real-time statistics and insights
 - ♿ Full accessibility support
-- 🚀 Lightning-fast performance with zero external dependencies
+- 🚀 Lightning-fast performance with no external dependencies
 
-## ✨ Features
+## Features
 
-### 🎨 Interactive Dashboard
-- **Real-time Search**: Instantly filter libraries by name or city
-- **Advanced Filters**:
-  - Filter by nation/country
-  - IIIF-only filter for standardized collections
-  - Open License filter for freely reusable materials
-- **Live Statistics**:
-  - Total libraries in database
+### Interactive dashboard
+- **Real-time search**: Filter libraries instantly by name or city
+- **Advanced filters**:
+  - Filter by nation or country
+  - Filter by standardized image format support (lets you access images the same way across different libraries)
+  - Filter by open license (find freely reusable materials)
+- **Live statistics**:
+  - Total libraries in the database
   - Number of participating nations
-  - IIIF-compliant collections count
-- **Responsive Design**: Optimized for desktop, tablet, and mobile
+  - Collections with standardized image format support
+- **Responsive design**: Works on desktop, tablet, and mobile devices
 
-### 📊 Detailed Library Information
+### Detailed library information
 Each library entry includes:
-- **Library Name & Location**: Official institution name, city, and country
-- **Website Link**: Direct access to the digitized collection
-- **IIIF Support**: 🖼️ Badge indicating International Image Interoperability Framework compatibility
-- **Open License**: 🔓 Badge for freely reusable collections
-- **Manuscript Quantity**: Approximate number of digitized manuscripts (Few, Dozens, Hundreds, Thousands)
+- **Library name and location**: Official institution name, city, and country
+- **Website link**: Direct access to the digitized collection
+- **Standardized image format support**: Badge indicating compatibility (lets you view and compare manuscripts consistently across libraries)
+- **Open license**: Badge for freely reusable collections
+- **Manuscript quantity**: Approximate number of digitized manuscripts (Few, Dozens, Hundreds, Thousands)
 
-### 📖 Comprehensive Documentation
+### Comprehensive documentation
 - Getting started guide
 - About the project and technology stack
 - Contributing guidelines
-- IIIF framework explanation
+- Information about standardized image formats
 
-## 🚀 Quick Start
+## Quick start
 
-### For Users
-Simply visit the live dashboard:
-👉 [DMMapp Library Directory](https://dioscorides.github.io/githubpagesexperiment/)
+### For researchers
+Visit the live dashboard to browse and search:
+👉 [DMMapp library directory](https://dioscorides.github.io/githubpagesexperiment/)
 
-No installation required. Everything runs in your browser!
+No installation required. Everything runs in your browser.
 
-### For Developers
+### For contributors
+Clone the repository and set up your local environment:
 
-#### Clone the Repository
 ```bash
 git clone https://github.com/Dioscorides/githubpagesexperiment.git
 cd githubpagesexperiment
 ```
 
-#### Local Development
-Since this is a static site, you can serve it locally:
-
-**Using Python 3:**
+Serve the site locally using Python 3:
 ```bash
 python -m http.server 8000
 ```
 
-**Using Node.js (http-server):**
+Or use Node.js:
 ```bash
 npx http-server
 ```
 
 Then open `http://localhost:8000` in your browser.
 
-#### Build Documentation
-The `/docs` folder uses MkDocs with the Material theme:
-
+To work with documentation using MkDocs:
 ```bash
-# Install dependencies
 pip install mkdocs mkdocs-material
-
-# Run locally with live reload
 mkdocs serve
-
-# Build static site
-mkdocs build
 ```
 
-## 📁 Project Structure
+## Project structure
 
 ```
 githubpagesexperiment/
-├── index.html              # Main dashboard HTML
-├── script.js               # Interactive dashboard logic (vanilla JS)
-├── style.css               # Custom Material Design styling
-├── data.json               # Library database (JSON format)
-├── schema.json             # JSON Schema for data validation
+├── index.html              # Main dashboard
+├── script.js               # Dashboard interactivity
+├── style.css               # Custom styling
+├── data.json               # Library database
+├── schema.json             # Data format definition
 │
-├── docs/                   # MkDocs documentation
+├── docs/                   # Documentation
 │   ├── index.md           # Home page
 │   ├── about.md           # About the project
-│   └── contributing.md    # Contribution guidelines
+│   └── contributing.md    # How to contribute
 │
-├── mkdocs.yml             # MkDocs configuration
+├── mkdocs.yml             # Documentation settings
 ├── README.md              # This file
-├── CONTRIBUTING.md        # Quick contribution guide
+├── CONTRIBUTING.md        # Contribution guide
 └── LICENSE                # MIT License
 ```
 
-## 🛠️ Technology Stack
+## Technology stack
 
-### Frontend Dashboard
+### Frontend dashboard
 - **HTML5**: Semantic markup
 - **CSS3**: Custom Material Design styling
 - **Vanilla JavaScript**: No frameworks, pure web standards
-- **Bootstrap Icons**: Beautiful, accessible icons
+- **Bootstrap Icons**: Accessible icons
 - **Google Fonts (Roboto)**: Professional typography
 
 ### Documentation
-- **MkDocs**: Fast, simple static site generator
-- **Material for MkDocs**: Beautiful, responsive theme
+- **MkDocs**: Static site generator
+- **Material for MkDocs**: Responsive theme
 
-### Data & Validation
-- **JSON**: Simple, portable flat-file database
-- **JSON Schema**: Automated data validation
-- **GitHub Actions**: CI/CD pipeline for automated checks
+### Data and validation
+- **Data format**: Simple, portable database (uses a text-based format for easy editing)
+- **Data validation**: Automated checks to ensure data quality
+- **GitHub Actions**: Automatic testing and deployment
 
-### Hosting & Deployment
-- **GitHub Pages**: Free, reliable hosting with custom domain support
-- **GitHub Actions**: Automatic build and deployment
+### Hosting and deployment
+- **GitHub Pages**: Free, reliable hosting
+- **GitHub Actions**: Automatic updates when you make changes
 
-## 📊 Data Schema
+## Data schema
 
 Each library entry in `data.json` follows this structure:
 
 ```json
 {
-  "library": "String - Official institution name",
-  "nation": "String - Country name",
-  "city": "String - City name",
-  "website": "String - URL to digitized collection",
-  "lat": "String - Latitude (optional, decimal degrees)",
-  "lng": "String - Longitude (optional, decimal degrees)",
-  "iiif": "Boolean - IIIF Manifest/Viewer support",
-  "is_free_cultural_works_license": "Boolean - Free cultural works license",
-  "quantity": "Enum - 'Few' | 'Dozens' | 'Hundreds' | 'Thousands' | 'Unknown'"
+  "library": "Official institution name",
+  "nation": "Country name",
+  "city": "City name",
+  "website": "URL to digitized collection",
+  "lat": "Latitude (optional)",
+  "lng": "Longitude (optional)",
+  "iiif": "Supports standardized image format",
+  "is_free_cultural_works_license": "Has open license",
+  "quantity": "Few | Dozens | Hundreds | Thousands | Unknown"
 }
 ```
 
-See [schema.json](./schema.json) for the complete JSON Schema definition.
+See [schema.json](./schema.json) for the complete definition.
 
-## 🤝 Contributing
+## Contributing
 
-We welcome contributions! There are several ways to help:
+You can help in several ways:
 
-### Adding Libraries
-1. **Search First**: Ensure the library isn't already in `data.json`
-2. **Edit `data.json`**: Add your entry following the schema
-3. **Create a Pull Request**: Submit to the `master` branch
+### Add libraries
+1. **Search first**: Make sure the library isn't already listed in `data.json`
+2. **Edit the file**: Add your entry following the data format
+3. **Submit a pull request**: Send it to the `master` branch
 
-[Detailed Contributing Guide →](./CONTRIBUTING.md)
+[See detailed contributing guide →](./CONTRIBUTING.md)
 
-### Reporting Issues
+### Report issues
 Found an error or have a suggestion?
-→ [Open an Issue](https://github.com/Dioscorides/githubpagesexperiment/issues)
+[Open an issue](https://github.com/Dioscorides/githubpagesexperiment/issues)
 
-### Development
-Want to improve the codebase?
-- Frontend improvements
-- Documentation enhancements
-- Feature requests
-- Bug fixes
+### Improve the codebase
+- Enhance the dashboard
+- Improve documentation
+- Suggest features
+- Fix bugs
 
-## 📖 About IIIF
+## About standardized image formats
 
-The [International Image Interoperability Framework](https://iiif.io/) (IIIF) is a set of open standards for delivering high-quality, attributed digital objects online at scale.
+Libraries that support standardized image formats (like IIIF) let you:
+- **Search across multiple collections** simultaneously
+- **View and compare manuscripts** side-by-side
+- **Zoom, rotate, and annotate** images
+- **Reuse collections** freely in your own projects
 
-Libraries supporting IIIF enable:
-- **Better Discovery**: Search across multiple collections simultaneously
-- **Advanced Comparison**: View and compare manuscripts side-by-side
-- **Enhanced Manipulation**: Zoom, rotate, crop, and annotate images
-- **Reusability**: Embed and share digitized collections freely
-
-## 🎨 Design Principles
+## Design principles
 
 1. **Simplicity**: Clean, maintainable code and design
 2. **Performance**: Fast loading with minimal dependencies
-3. **Accessibility**: WCAG compliant for all users
-4. **Consistency**: Unified visual design across all components
-5. **Open Source**: Transparent development, community-driven
+3. **Accessibility**: Works for all users, including those using assistive technology
+4. **Consistency**: Unified design across all components
+5. **Open source**: Transparent development, community-driven
 
-## 📝 License
+## License
 
-This project is licensed under the **MIT License** - see [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.
 
-This means you're free to use, modify, and distribute this project, with proper attribution.
+You're free to use, modify, and distribute this project with proper attribution.
 
-## 🙋 Support & Questions
+## Support and questions
 
-- **Documentation**: See the [docs/](./docs/) folder for comprehensive guides
-- **Issues & Discussions**: [GitHub Issues](https://github.com/Dioscorides/githubpagesexperiment/issues)
+- **Documentation**: See the [docs/](./docs/) folder
+- **Issues and discussions**: [GitHub Issues](https://github.com/Dioscorides/githubpagesexperiment/issues)
 - **Contributing**: See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
-## 🔗 Related Resources
+## Related resources
 
-- [IIIF Official Website](https://iiif.io/)
-- [MkDocs Documentation](https://www.mkdocs.org/)
-- [JSON Schema](https://json-schema.org/)
+- [Standardized image format information](https://iiif.io/)
+- [MkDocs documentation](https://www.mkdocs.org/)
+- [Data schema resources](https://json-schema.org/)
 - [Material Design](https://material.io/)
 - [GitHub Pages](https://pages.github.com/)
 
-## 📈 Project Statistics
+## Project statistics
 
-- **Total Libraries**: See dashboard for current count
-- **Countries Represented**: Explore the directory to discover
-- **IIIF-Ready Collections**: Filter to see available options
-- **Last Updated**: Check GitHub commit history
+- **Total libraries**: Check the dashboard for current count
+- **Countries represented**: Explore the directory to discover
+- **Collections with standardized image format support**: Use the filter to see available options
+- **Last updated**: Check the GitHub commit history
 
-## 🚀 Roadmap
+## Roadmap
 
-Potential future enhancements:
+Future enhancements you might see:
 - Geographic map view of libraries
-- Advanced search with full-text manuscript data
+- Advanced search with manuscript details
 - Collections comparison tool
-- User submissions and voting system
-- API for third-party integrations
+- User submissions and voting
+- API for other applications
 - Multi-language support
 
-## 👨‍💻 Author
+## Author
 
 Created with ❤️ in the Netherlands
 
-Want to see your name here? [Contribute today!](./CONTRIBUTING.md)
+Want recognition? [Contribute today!](./CONTRIBUTING.md)
 
 ---
 
 **Made with ❤️ for researchers, historians, and manuscript enthusiasts everywhere.**
 
-[Visit the Live Dashboard](https://dioscorides.github.io/githubpagesexperiment/) | [View Documentation](./docs/) | [Contribute](./CONTRIBUTING.md)
+[Visit the live dashboard](https://dioscorides.github.io/githubpagesexperiment/) | [View documentation](./docs/) | [Contribute](./CONTRIBUTING.md)

@@ -1,206 +1,234 @@
-# Schema Documentation
+# Data structure guide
 
-## Overview
+This guide explains how DMMapp organizes information about manuscript libraries. Whether you're adding a new library or editing an existing entry, understanding the data structure helps you provide complete and accurate information.
 
-The Medieval Manuscripts Database uses a JSON schema to validate and structure manuscript collection records. This document explains the schema design, field requirements, and the reasoning behind validation rules.
+## How the database is organized
 
-## Schema Structure
+Each library record contains the same set of information fields. This consistency ensures that researchers can search, filter, and compare collections reliably across the entire directory.
 
-The database consists of an array of objects, where each object represents a single library or manuscript collection. All records must conform to the schema defined in `schema.json`.
+All records follow the same format defined in `schema.json`, our data validation file.
 
-## Required Fields
+## Required information
 
-The following fields must be present in every record:
+Every library record must include the following information:
 
-- `id`
-- `library`
-- `nation`
-- `city`
-- `website`
-- `copyright`
-- `quantity`
-- `iiif`
-- `is_free_cultural_works_license`
-- `is_part_of`
+- Unique ID number
+- Library name
+- Country and city
+- Website address
+- Copyright or license information
+- Approximate number of manuscripts
+- Technical format support (IIIF)
+- License type (Free Cultural Works or other)
+- Project participation
 
-These fields are fundamental to the database and ensure complete, consistent records across all entries.
+These fields are essential to create a reliable, searchable directory.
 
-## Field Definitions
+## How to fill out each field
 
-### Core Identification
+### Unique identification
 
-#### `id` (integer, required)
+#### ID number
 
-A unique integer identifier for each record. IDs are sequential and serve as the primary key for internal reference and data management.
+A unique number that identifies this library in our database. IDs are assigned sequentially.
 
 **Example:** `502`
 
-**Why required:** Enables reliable record tracking, sorting, and data integrity during updates and merges.
+**Why it matters:** This number prevents duplicate entries and ensures accurate record tracking.
 
-#### `library` (string, required)
+#### Library name
 
-The official name of the library, archive, or institution that maintains the manuscript collection.
+The official name of the institution that holds the manuscript collection.
 
-**Requirements:**
+**Tips:**
+- Use the formal institutional name as it appears on their website
 - Minimum 2 characters
-- Should be the formal institutional name
+- Include "Library," "Archive," or "Museum" if it's part of the official name
 
-**Example:** `"National Library of France"`
+**Example:** `"National Library of France"` or `"Bodleian Library"`
 
-**Why required:** Identifies the source and allows users to find specific institutions.
+**Why it matters:** Researchers use the library name to find specific collections and verify the source of manuscripts.
 
-### Geographic Information
+### Geographic information
 
-#### `nation` (string, required)
+#### Country
 
 The country where the library is located. Use the English name of the country.
 
-**Example:** `"France"`
+**Example:** `"France"` or `"United Kingdom"`
 
-**Why required:** Enables geographic filtering and organization of collections by country.
+**Tips:**
+- Use standard country names (not abbreviations)
+- Be consistent with other entries
 
-#### `city` (string, required)
+**Why it matters:** Geographic filtering helps researchers discover collections in their region of interest.
 
-The city or municipality where the library is located.
+#### City
 
-**Example:** `"Paris"`
+The city or town where the library is located.
 
-**Why required:** Provides precise geographic context and helps users locate collections.
+**Example:** `"Paris"` or `"Oxford"`
 
-### Access Information
+**Tips:**
+- Use the city name in English where possible
+- Include the city name as it appears on maps
 
-#### `website` (string, required, URI format)
+**Why it matters:** Precise location information helps researchers contact institutions and plan research visits.
 
-A direct URL to the library's manuscript collection or digitization portal.
+### Access information
+
+#### Website address
+
+A direct link to the library's manuscript collection or digital portal.
 
 **Requirements:**
-- Must be a valid URI
-- Should link directly to the manuscript section when possible
-- Must use HTTPS protocol when available
+- Must be a working URL
+- Link directly to the manuscript section when possible
+- Use HTTPS (secure) links when available
 
 **Example:** `"https://gallica.bnf.fr/html/und/manuscrits/manuscrits"`
 
-**Why required:** Provides users with direct access to the collections. URLs are validated to ensure they are properly formatted and functional.
+**Tips:**
+- Test the link before submitting to ensure it works
+- Avoid links to the institution's home page—link directly to manuscripts
 
-#### `copyright` (string, required)
+**Why it matters:** This is the fastest way for researchers to access the collection. A working link is essential.
 
-Information about the copyright or license status of the digitized manuscripts in the collection.
+#### Copyright or license information
 
-**Acceptable values:**
-- License type (e.g., "CC BY 4.0", "CC0 1.0")
-- "Unknown" (if copyright status cannot be determined)
-- Specific institution copyright information
+A description of the rights and restrictions that apply to the digitized manuscripts.
+
+**What to enter:**
+- License type (e.g., `"CC BY 4.0"`, `"CC0 1.0"`)
+- `"Unknown"` if you cannot determine the copyright status
+- Institution-specific copyright information if applicable
+
+**Common licenses:**
+- `"CC0 1.0"` — Public domain; free to use, modify, and share
+- `"CC BY 4.0"` — Attribution required; free to use and share with credit
+- `"CC BY-SA 4.0"` — Attribution and share-alike required
+- `"All rights reserved"` — Restricted; contact institution for permission
 
 **Example:** `"CC0 1.0"`
 
-**Why required:** Users need to understand the usage rights of the materials before accessing them.
+**Tips:**
+- Check the library's website for their stated copyright or license
+- If unclear, enter `"Unknown"`
 
-### Collection Characteristics
+**Why it matters:** Researchers need to understand what they can do with the materials before using them in their work.
 
-#### `quantity` (string, required, enumerated)
+### Collection characteristics
 
-An approximate count of digitized medieval manuscripts in the collection.
+#### Approximate number of manuscripts
 
-**Allowed values:**
-- `"Few"` - Fewer than 50 manuscripts
-- `"Dozens"` - 50-100 manuscripts
-- `"Hundreds"` - 100-1,000 manuscripts
-- `"Thousands"` - 1,000+ manuscripts
-- `"Unknown"` - Count cannot be determined
+An estimate of how many medieval manuscripts are in the digitized collection.
+
+**Categories:**
+- `"Few"` — Fewer than 50 manuscripts
+- `"Dozens"` — 50 to 100 manuscripts
+- `"Hundreds"` — 100 to 1,000 manuscripts
+- `"Thousands"` — More than 1,000 manuscripts
+- `"Unknown"` — Unable to determine
 
 **Example:** `"Hundreds"`
 
-**Why enumerated:** Allows consistent categorization without requiring precise counts, which are often unavailable. Ranges accommodate uncertainty and variation in collection sizes.
+**Tips:**
+- Check the library's website for collection size information
+- Use ranges when exact numbers aren't available
+- When in doubt, choose `"Unknown"` rather than guessing
 
-**Why required:** Helps users understand the scope and value of each collection.
+**Why it matters:** Knowing the collection size helps researchers understand the scope and value of available materials.
 
-#### `iiif` (boolean, required)
+#### Standardized image format support (IIIF)
 
-Indicates whether the collection supports IIIF (International Image Interoperability Framework) for image access and manipulation.
+Whether the collection supports a standardized image format that allows researchers to view, zoom, compare, and use manuscripts in advanced ways.
 
-**Values:**
-- `true` - Collection supports IIIF
-- `false` - Collection does not support IIIF
+**Choose one:**
+- `true` — The collection supports standardized image format
+- `false` — The collection does not support standardized image format
 
 **Example:** `true`
 
-**Why required:** IIIF support is a key technical feature that determines interoperability with other tools and platforms. Users need this information to plan integration strategies.
+**How to check:**
+- Look for "IIIF" or "Mirador" on the library's website
+- Check if images can be zoomed, rotated, or downloaded in high quality
+- Contact the institution if you're unsure
 
-#### `is_free_cultural_works_license` (boolean, required)
+**Why it matters:** Collections with this format support offer researchers more flexibility and powerful research tools.
 
-Indicates whether the collection uses a Free Cultural Works license (such as CC0, CC BY, or CC BY-SA).
+#### License type (Free Cultural Works)
 
-**Values:**
-- `true` - Collection uses a Free Cultural Works license
-- `false` - Collection uses a different license or license unknown
+Whether the collection uses a very permissive open license that allows maximum reuse.
+
+**Choose one:**
+- `true` — Collection uses a Free Cultural Works license (CC0, CC BY, CC BY-SA)
+- `false` — Collection uses a different license or the license type is unknown
 
 **Example:** `false`
 
-**Why required:** Helps users quickly identify collections with the most permissive licenses for reuse and research.
+**Tips:**
+- Free Cultural Works licenses include CC0, CC BY, and CC BY-SA
+- If the copyright information includes "All rights reserved," enter `false`
+- When unsure, enter `false`
 
-### Project Association
+**Why it matters:** Researchers quickly identify collections with the most generous permissions for reuse in their own work.
 
-#### `is_part_of` (boolean, required)
+### Project association
 
-Indicates whether this library's collection is part of a larger, coordinated manuscript digitization project or initiative.
+#### Part of a larger project
 
-**Values:**
-- `true` - Collection is part of a larger project
-- `false` - Collection is independent
+Whether this library's collection is part of a coordinated digitization initiative.
+
+**Choose one:**
+- `true` — Collection is part of a larger project
+- `false` — Collection operates independently
 
 **Example:** `true`
 
-**Why required:** Helps users understand the organizational structure and find related collections within projects.
+**Tips:**
+- Check if the library mentions a larger initiative or program
+- Examples: Europeana, Internet Archive, Digital Humanities projects
 
-#### `is_part_of_project_name` (string or null, conditionally required)
+**Why it matters:** Researchers can discover related collections within the same initiative.
+
+#### Project name (if applicable)
 
 The name of the larger project to which this collection belongs.
 
 **Requirements:**
-- Required if `is_part_of` is `true`
-- Must not be null when `is_part_of` is `true`
-- Minimum 1 character when present
+- Only fill this in if you answered `true` above
+- Must not be empty when filled in
 
 **Example:** `"Europeana Manuscripts"`
 
-**Why conditionally required:** When a collection is part of a project, users need the project name to understand the organizational context and find other related collections.
+**Why it matters:** The project name helps researchers understand the organizational context and find other related collections.
 
-#### `is_part_of_url` (string or null, URI format, conditionally required)
+#### Project website (if applicable)
 
-A direct URL to the larger project's website or portal.
+A direct link to the larger project's website or portal.
 
 **Requirements:**
-- Required if `is_part_of` is `true`
-- Must not be null when `is_part_of` is `true`
-- Must be a valid URI
+- Only fill this in if you answered `true` above
+- Must be a working URL
 
 **Example:** `"https://www.europeana.eu/"`
 
-**Why conditionally required:** Provides users with a way to access and learn more about the larger project when applicable.
+**Why it matters:** Researchers can access the project directly to explore other participating collections.
 
-## Validation Rules
+## How we check the data
 
-### Conditional Validation: Project Association
+All records are validated against our data structure standards before being added to the directory.
 
-When a record has `is_part_of` set to `true`, both `is_part_of_project_name` and `is_part_of_url` must be present and non-null. This ensures that project information is always complete.
+### Project information consistency
 
-**Rule:** If `is_part_of` = `true`, then:
-- `is_part_of_project_name` must be a string with at least 1 character
-- `is_part_of_url` must be a valid URI
+If you indicate that a collection is part of a larger project (`true`), you must provide:
 
-**Rule:** If `is_part_of` = `false`, then:
-- `is_part_of_project_name` can be null
-- `is_part_of_url` can be null
+- The project name (at least 1 character)
+- The project website (a valid URL)
 
-**Example of valid records:**
+This ensures that project information is complete and usable.
 
-```json
-{
-  "is_part_of": false,
-  "is_part_of_project_name": null,
-  "is_part_of_url": null
-}
-```
+**Valid example:**
 
 ```json
 {
@@ -210,51 +238,49 @@ When a record has `is_part_of` set to `true`, both `is_part_of_project_name` and
 }
 ```
 
-## Design Rationale
+**Also valid (independent collection):**
 
-### Required Fields
+```json
+{
+  "is_part_of": false,
+  "is_part_of_project_name": null,
+  "is_part_of_url": null
+}
+```
 
-All ten fields are required to ensure data completeness and consistency:
+## Why we organize data this way
 
-- **Identification fields** (`id`, `library`) - Enable unique record tracking
-- **Geographic fields** (`nation`, `city`) - Support filtering and discovery
-- **Access fields** (`website`, `copyright`) - Allow users to find and use collections
-- **Characteristic fields** (`quantity`, `iiif`, `is_free_cultural_works_license`, `is_part_of`) - Enable informed decision-making about which collections to use
+### Required fields ensure completeness
 
-### Boolean Flags Instead of Enumerations
+Every field is required so that researchers have complete information about each collection. This consistency makes searching and comparing libraries reliable.
 
-`iiif`, `is_free_cultural_works_license`, and `is_part_of` use boolean values for simplicity:
+### Categories instead of exact numbers
 
-- Clear yes/no distinction
-- Efficient data storage
-- Straightforward API filtering
+We use approximate ranges (Few, Dozens, Hundreds, Thousands) for manuscript counts because:
 
-### Enumerated Quantity Field
-
-`quantity` uses predefined categories rather than exact numbers because:
-
-- Exact counts are often unavailable in external data sources
-- Approximate ranges are sufficient for user needs
+- Exact numbers are difficult to obtain from institutions
+- Ranges are sufficient for researchers to understand collection scope
+- Consistent categories make comparison easier
 - Categories reduce data entry errors
-- Consistency across records is easier to maintain
 
-### Conditional Requirements
+### Yes/No choices for technical features
 
-The project association fields use conditional requirements to:
+We use simple Yes/No choices for format support and license type because:
 
-- Enforce data integrity (project information is complete or absent)
-- Prevent incomplete records (no orphaned project names or URLs)
-- Support optional project association (not all collections are part of projects)
+- Clear and easy to understand
+- Fast to search and filter
+- Straightforward for researchers to find what they need
 
-## Data Quality
+### Flexible project association
 
-All records are validated against `schema.json` before acceptance into the database.
+Collections can be independent or part of projects because:
 
-## Versioning
+- Not all libraries participate in coordinated initiatives
+- When they do, researchers benefit from discovering related collections
+- Optional project information accommodates both types
 
-This schema uses JSON Schema draft-07 for compatibility and validation tooling. Future updates to the schema will maintain backward compatibility where possible.
+## Related files
 
-## Related Files
-
-- `schema.json` - The machine-readable schema definition
-- `data.json` - The actual manuscript collection records
+- `schema.json` — The technical validation rules for our data
+- `data.json` — The actual library records
+- [Update the dashboard data](./update-data.md) — How to add or edit library information

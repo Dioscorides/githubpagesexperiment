@@ -1,70 +1,64 @@
-# How to Update the Dashboard Data
+# Update the dashboard data
 
-Welcome! This guide walks you through updating the manuscript library information on your DMMapp dashboard. Don't worry—you don't need to know how to code. The process takes just a few minutes, and we'll guide you step by step.
+This guide explains how to add new libraries and edit existing information in the DMMapp library directory. You don't need coding knowledge—the process uses GitHub's built-in editor.
 
-## What You'll Learn
+## What you'll learn
 
-By the end of this guide, you'll know how to:
-
-- Find and open the data file in your browser
-- Add new libraries or edit existing information
-- Submit your changes for review
+- Find and open the data file
+- Add new libraries or edit existing entries
+- Submit changes for review
 - Verify that the dashboard reflects your updates
 
 ## Prerequisites
 
-Before you start, make sure you have:
+- A GitHub account ([create one](https://github.com/signup) if needed)
+- Write access to the repository
+- A modern web browser (Chrome, Firefox, Safari, or Edge)
 
-- A **GitHub account** (it's free—[create one here](https://github.com/signup) if you don't have one)
-- **Write access** to the repository (your project administrator should have granted this to you)
-- A modern web browser (Chrome, Firefox, Safari, or Edge all work great)
+!!! tip "New to GitHub?"
+    GitHub is a platform for storing and collaborating on code and documents. This guide uses GitHub's built-in editor, so you won't need to use the command line.
 
-!!! tip "First time with GitHub?"
-    GitHub is a platform where people store and collaborate on code and documents. Think of it like Google Docs, but for technical projects. We'll use GitHub's built-in editor so you never have to touch the command line.
+!!! info "About data governance"
+    The data.json file is maintained by @DIOSCORIDES. When you submit changes, they review your work to ensure quality standards. This keeps the library directory accurate and reliable for researchers worldwide.
 
-!!! info "A Quick Note About Governance"
-    The data.json file is maintained by @DIOSCORIDES. When you submit changes, they'll review your work to ensure everything meets our quality standards. This keeps the library directory accurate and reliable for researchers worldwide.
-
-## Step 1: Navigate to the Data File
+## 1. Find the data file
 
 1. Open your GitHub repository in your browser
-2. Click on the file named **data.json** in the file list
+2. Click **data.json** in the file list
 
-You're now viewing the current library data in a read-only format.
+The file displays in read-only format.
 
-## Step 2: Click the Edit Button
+## 2. Enter edit mode
 
-Look for the **pencil icon** (✎) in the toolbar at the top of the file viewer. Click it to enter edit mode.
+Click the **pencil icon** (✎) in the toolbar at the top of the file viewer.
 
-Your browser will switch to an editor where you can make changes. You'll see the data formatted as JSON—a structured format for storing information.
+Your browser switches to an editor. You'll see the data formatted as JSON—a structured format for storing information.
 
-!!! warning "About JSON Format"
-    JSON has strict rules about how data is organized. Each library is wrapped in curly braces `{ }`, fields are separated by commas, and text values must be in quotes. GitHub will check your changes before you submit them, so don't worry about making a perfect edit the first time.
+!!! warning "About JSON format"
+    JSON has strict formatting rules. Each library entry uses curly braces `{ }`, fields are separated by commas, and text values must be in quotes. GitHub validates your changes before submission, so you can make corrections as needed.
 
-## Step 3: Make Your Changes
+## 3. Make your changes
 
-### Required Fields
+### Required fields
 
-Every library entry must have these four fields:
+Every library entry must include:
 
-- **library**: The name of the institution (e.g., "Bodleian Library")
-- **nation**: The country where the library is located (e.g., "United Kingdom")
-- **city**: The city name (e.g., "Oxford")
-- **website**: A working link to the digitized collection (must start with `http://` or `https://`)
+- **library**: Institution name (e.g., "Bodleian Library")
+- **nation**: Country name (e.g., "United Kingdom")
+- **city**: City name (e.g., "Oxford")
+- **website**: Working URL to the digitized collection (must start with `http://` or `https://`)
 
-### Optional Fields
+### Optional fields
 
-You can add these fields if the information is available:
+- **lat**: Latitude coordinate as text (e.g., `"51.7540"`)
+- **lng**: Longitude coordinate as text (e.g., `"-1.2566"`)
+- **iiif**: Standardized image format support (`true` or `false`)
+- **is_free_cultural_works_license**: Free license status (`true` or `false`)
+- **quantity**: Manuscript count (`"Few"`, `"Dozens"`, `"Hundreds"`, `"Thousands"`, or `"Unknown"`)
 
-- **lat**: Latitude coordinate (as text, e.g., `"51.7540"`)
-- **lng**: Longitude coordinate (as text, e.g., `"-1.2566"`)
-- **iiif**: Does the library support IIIF standards? (`true` or `false`)
-- **is_free_cultural_works_license**: Is the collection under a free license? (`true` or `false`)
-- **quantity**: How many manuscripts? (must be one of: `"Few"`, `"Dozens"`, `"Hundreds"`, `"Thousands"`, or `"Unknown"`)
+### Add a new library
 
-### Adding a New Library
-
-Find the last library entry in the file. It looks like this:
+Locate the last library entry in the file:
 
 ```json
 {
@@ -80,204 +74,193 @@ Find the last library entry in the file. It looks like this:
 }
 ```
 
-To add a new library:
+1. Place your cursor after the closing `}`
+2. Add a comma (`,`)
+3. Press Enter
+4. Copy the template above and replace values with your library's information
+5. Verify all required fields are filled
 
-1. Place your cursor after the closing `}` of the last entry
-2. Add a **comma** (`,`) immediately after the `}`
-3. Press Enter to create a new line
-4. Copy the template above and replace the example values with your library's actual information
-5. Make sure all required fields are filled in (library, nation, city, website)
+### Edit existing information
 
-### Editing Existing Information
+Click any value and change it. Examples:
 
-Simply click on any value and change it. For example:
+- Update website: `"website": "https://new-collection-link.org"`
+- Correct city name: `"city": "Berlin"`
+- Add coordinates: `"lat": "52.5200"` and `"lng": "13.4050"`
+- Update quantity: `"quantity": "Thousands"`
 
-- To update a website: `"website": "https://new-collection-link.org"`
-- To correct a city name: `"city": "Berlin"`
-- To add coordinates: `"lat": "52.5200"` and `"lng": "13.4050"`
-- To update quantity: `"quantity": "Thousands"`
-
-!!! danger "Common Mistakes to Avoid"
-    - **Missing commas**: Every field needs a comma after it, except the last one. Check: `"field": "value",`
-    - **Unquoted text**: All text values must be in quotes. Wrong: `"city": Berlin`. Right: `"city": "Berlin"`
-    - **Boolean values**: Use `true` or `false` without quotes for yes/no fields
-    - **Invalid URLs**: Website URLs must start with `http://` or `https://`. GitHub will catch this during validation
-    - **Quantity values**: Must be exactly one of the five options listed above (capitalization matters!)
+!!! danger "Avoid these mistakes"
+    - **Missing commas**: Every field needs a comma after it, except the last one. Correct: `"field": "value",`
+    - **Unquoted text**: All text values require quotes. Wrong: `"city": Berlin`. Right: `"city": "Berlin"`
+    - **Boolean values**: Use `true` or `false` without quotes
+    - **Invalid URLs**: Websites must start with `http://` or `https://`
+    - **Quantity values**: Use exactly one of the five options (capitalization matters)
     
-    If you make a mistake, GitHub's validation will alert you before you submit.
+    GitHub validates your changes before submission and alerts you to errors.
 
-## Step 4: Submit Your Changes for Review
+## 4. Submit your changes for review
 
-Scroll to the bottom of the page. You'll see a **Propose changes** section.
+Scroll to the bottom and complete the **Propose changes** section.
 
-!!! info "What's a Pull Request?"
-    A "pull request" (or PR) is a formal way to submit your changes for review. It's like saying, "I've made some updates—please check them over before adding them to the official data." This ensures quality and accuracy.
+!!! info "About pull requests"
+    A "pull request" (PR) is a formal way to submit changes for review. It ensures quality and accuracy before updating the official data.
 
-### Fill in the Change Details
+### Fill in the change details
 
-You'll see a form with these fields:
-
-**Change Type** (select one):
+Select a change type:
 - 🆕 New Library Entry
 - ✏️ Correction (Typo, broken link, coordinate fix)
-- 🗑️ Removal (Library closed/no longer digitized)
+- 🗑️ Removal (Library closed or no longer digitized)
 
-**Description**: Write a brief explanation of your change. For example:
+Write a brief description of your change. Examples:
+
 - "Added University of Rome manuscript library with IIIF support"
 - "Updated website URL for Paris collection—old link was broken"
 - "Fixed spelling of library name in Berlin entry"
 
-### Complete the Verification Checklist
+### Complete the verification checklist
 
-Before submitting, verify that you've done these things:
+Before submitting, verify:
 
-- ✓ I have verified the URL works (click the link in your browser to test it)
-- ✓ I have checked that the JSON is valid (no missing commas or brackets)
-- ✓ I have used the correct data format (all required fields present, proper capitalization)
+- ✓ URL works (test the link in your browser)
+- ✓ JSON is valid (no missing commas or brackets)
+- ✓ Data format is correct (required fields present, proper capitalization)
 
-!!! tip "How to Test Your JSON"
-    Not sure if your JSON is correct? Look for GitHub's automatic validation message. If you see a green checkmark (✓), you're good to go! If you see a red X (✗), scroll down to see what needs fixing.
+!!! tip "Validate your JSON"
+    GitHub's automatic validation message shows if your JSON is correct. A green checkmark (✓) means you're ready to submit. A red X (✗) indicates what needs fixing.
 
-## Step 5: Wait for Review and Validation
+## 5. Wait for review and validation
 
-After you submit your pull request, here's what happens automatically:
+### Automatic validation (1-2 minutes)
 
-### Automatic Validation (1-2 minutes)
+GitHub runs automatic checks:
 
-GitHub runs automatic checks on your data:
+- **JSON Syntax Check**: Verifies proper formatting
+- **Schema Validation**: Confirms required fields and correct format
+- **Format Verification**: Validates URLs, coordinates, and quantity values
 
-- **JSON Syntax Check**: Ensures your data is properly formatted (no missing commas, quotes, or brackets)
-- **Schema Validation**: Verifies that required fields are present and correct
-- **Format Verification**: Confirms that URLs are valid, coordinates are in the right format, and quantity values match our standards
+A green checkmark (✓) indicates all checks passed.
 
-If everything passes, you'll see a green checkmark (✓) next to "All checks passed."
-
-!!! warning "If Validation Fails"
-    Don't worry! GitHub will show you exactly what's wrong. Look for red text describing the error. Common issues include:
+!!! warning "If validation fails"
+    GitHub displays errors describing what's wrong. Common issues:
     
-    - **Missing required field**: Make sure library, nation, city, and website are all present
+    - **Missing required field**: Add library, nation, city, and website
     - **Invalid URL format**: Website must start with http:// or https://
     - **JSON syntax error**: Check for missing commas between fields
-    - **Invalid quantity value**: Must be exactly "Few", "Dozens", "Hundreds", "Thousands", or "Unknown"
+    - **Invalid quantity value**: Use "Few", "Dozens", "Hundreds", "Thousands", or "Unknown"
     
-    Go back to edit your data and fix the issue, then resubmit.
+    Edit your data to fix the issue and resubmit.
 
 ### Review by @DIOSCORIDES (24-48 hours)
 
-Once validation passes, @DIOSCORIDES will review your changes. They'll check:
+@DIOSCORIDES reviews your changes for:
 
-- Whether the library information is accurate
-- Whether the website link actually leads to digitized manuscripts
-- Whether coordinates (if provided) are correct
-- Whether the data improves our collection
+- Accuracy of library information
+- Working website links to digitized manuscripts
+- Correct coordinates (if provided)
+- Overall data quality
 
-**Your pull request will be either:**
+Your pull request will be:
 
-- ✅ **Approved and merged** — Your changes are added to the live database
-- 💬 **Requested for changes** — @DIOSCORIDES may ask you to clarify or update something
-- ❌ **Declined** — If the information doesn't meet quality standards
+- ✅ **Approved and merged** — Changes added to the live database
+- 💬 **Requested for changes** — Updates needed before approval
+- ❌ **Declined** — Information doesn't meet quality standards
 
-### Dashboard Updates (5-15 minutes after approval)
+### Dashboard updates (5-15 minutes after approval)
 
-Once your pull request is approved and merged:
+After approval and merge:
 
 1. GitHub automatically rebuilds the website
-2. Your new library appears on the dashboard
-3. Filters and search become available for your data
+2. Your library appears on the dashboard
+3. Search and filters include your data
 
-!!! tip "Check Your Work"
-    After your changes are approved:
+!!! tip "Verify your changes"
+    After approval:
     
-    1. Wait about 10-15 minutes
-    2. Refresh your dashboard page (press F5 or click the refresh button)
-    3. Search for your new library or look for your edited information
+    1. Wait 10-15 minutes
+    2. Refresh your dashboard page (press F5)
+    3. Search for your library or look for your edits
     
-    If you still don't see the update after 15 minutes, try clearing your browser cache (Ctrl+Shift+Delete on Windows)
+    If changes don't appear after 15 minutes, clear your browser cache (Ctrl+Shift+Delete on Windows).
 
 ## Troubleshooting
 
-### I see red validation errors
+### Resolve validation errors
 
-**What to do**: GitHub is telling you something's wrong. Here's how to fix it:
+GitHub displays error messages indicating what's wrong:
 
-1. Read the error message carefully—it tells you exactly what's wrong
-2. Go back to your data and find the problem (usually missing commas, quotes, or invalid URLs)
-3. Scroll down and click **Edit** again to fix it
-4. Make your correction and resubmit
+1. Read the error message carefully
+2. Return to your data and find the problem (typically missing commas, quotes, or invalid URLs)
+3. Click **Edit** to correct it
+4. Resubmit
 
 **Common validation errors:**
 
-| Error | What It Means | How to Fix |
-|-------|---------------|-----------|
-| `Invalid JSON` | Missing comma or quote | Check each field—every field before the last needs a comma |
-| `Invalid URI format` | Website URL is wrong | Make sure it starts with `http://` or `https://` |
-| `Missing required property` | A required field is empty | Add library, nation, city, and website to every entry |
-| `Invalid enum value` | Quantity value is wrong | Use only "Few", "Dozens", "Hundreds", "Thousands", or "Unknown" |
+| Error | Fix |
+|-------|-----|
+| `Invalid JSON` | Check each field—every field before the last needs a comma |
+| `Invalid URI format` | Ensure URL starts with `http://` or `https://` |
+| `Missing required property` | Add library, nation, city, and website to every entry |
+| `Invalid enum value` | Use only "Few", "Dozens", "Hundreds", "Thousands", or "Unknown" |
 
-### My pull request is still pending after 24 hours
+### Follow up on pending reviews
 
-**What to do**: @DIOSCORIDES may be busy. Here's how to follow up:
+If your pull request hasn't been reviewed after 24 hours:
 
 1. Go to your pull request
-2. Scroll to the bottom and add a comment: "Hi @DIOSCORIDES, could you review this when you have a moment?"
-3. You can also check if validation passed (look for the green checkmark)
+2. Scroll to the bottom and comment: "Hi @DIOSCORIDES, could you review this when available?"
+3. Check that validation passed (look for a green checkmark)
 
-If validation failed, fix those errors first—@DIOSCORIDES won't review a PR that doesn't pass checks.
+Fix any validation failures before requesting review.
 
-### @DIOSCORIDES asked for changes
+### Respond to requested changes
 
-**What to do**: This is normal! Here's the process:
+If @DIOSCORIDES requests changes:
 
-1. Read their comment carefully—they'll tell you exactly what needs to change
-2. Click the **Files changed** tab to see what they flagged
-3. Click the **Edit** button to make the requested changes
-4. Save and resubmit (GitHub will update your existing pull request, no need to create a new one)
-5. Add a comment: "Done! I've made the requested changes."
+1. Read their comment carefully
+2. Click the **Files changed** tab to see flagged items
+3. Click **Edit** to make corrections
+4. Save and resubmit (GitHub updates your existing PR)
+5. Add a comment: "Done—I've made the requested changes."
 
-### My changes were declined
+### Handle declined changes
 
-**What to do**: This means the information didn't meet quality standards. Here's what to do:
+If your changes are declined:
 
-1. Read @DIOSCORIDES's comment explaining why
-2. Gather better information (verify the website, confirm coordinates, etc.)
-3. When you're ready, create a new pull request with improved data
-4. Reference the original PR in your description: "This improves on PR #123 with verified coordinates"
+1. Read @DIOSCORIDES's explanation
+2. Gather additional information (verify websites, confirm coordinates)
+3. Create a new pull request with improved data
+4. Reference the original PR: "This improves on PR #123 with verified coordinates"
 
-### The dashboard looks broken after my changes were approved
+### Investigate deployment issues
 
-**What to do**: Don't worry—this is rare. Here's how to investigate:
+If the dashboard appears broken after approval:
 
-1. Go to your merged pull request on GitHub
-2. Click **Commits** to see exactly what changed
-3. Wait 10-15 minutes (the deployment may still be in progress)
-4. Check the **Actions** tab to see if the deployment succeeded
-5. If there's an error, contact your repository administrator
+1. Go to your merged pull request
+2. Click **Commits** to see what changed
+3. Wait 10-15 minutes (deployment may still be in progress)
+4. Check the **Actions** tab for deployment status
+5. Contact your repository administrator if errors persist
 
-!!! tip "Pro Tip: Always Make a Backup"
-    Before making big changes, select all the data, copy it, and paste it into a text file on your computer. If something goes wrong, you'll have a backup to restore from.
+!!! tip "Create a backup"
+    Before making significant changes, select all data, copy it, and save it to a text file on your computer. You can restore it if needed.
 
-## Best Practices
+## Best practices
 
-- **Be specific in descriptions**: Instead of "update data," write "Added City Library in Paris with IIIF support and corrected coordinates"
-- **Test URLs before submitting**: Click the website link in your browser to make sure it works
-- **One change at a time**: If you need to add 5 new libraries, do it in one pull request (but one at a time is easier to review)
-- **Double-check spelling**: Library names and city names should match official sources
-- **Use accurate coordinates**: If you provide lat/lng, make sure they're correct (use Google Maps to verify)
-- **Check the checklist**: Before submitting, make sure you've verified all three items in the PR checklist
-- **Be patient with review**: @DIOSCORIDES may take 24-48 hours to respond
+- **Write specific descriptions**: Instead of "update data," write "Added City Library in Paris with IIIF support and corrected coordinates"
+- **Test URLs before submitting**: Verify the website link works in your browser
+- **Make one change type per PR**: Add all new libraries in one PR, but keep additions separate from corrections
+- **Verify spelling**: Library names and cities should match official sources
+- **Provide accurate coordinates**: Use Google Maps to verify lat/lng values
+- **Complete the checklist**: Verify all three items before submitting
+- **Allow time for review**: @DIOSCORIDES typically responds within 24-48 hours
 
-## Need Help?
+## Additional resources
 
-- **Questions about a specific field?** Check the [Data Schema](index.md#data-schema) section in the overview
-- **Confused about a value like "IIIF"?** See the [About IIIF](index.md#about-iiif) section
-- **Need technical support?** Contact your repository administrator
-
-## What's Next?
-
-Once you're comfortable updating data, you might want to:
-
-- Learn about [Contributing](contributing.md) to other parts of the project
-- Explore the full [Dashboard](../index.html) to see how your data appears
-- Read [About the Project](about.md) for context on DMMapp
+- [Data schema](index.md#data-schema) — Field definitions and format details
+- [About standardized image formats](index.md#about-standardized-image-formats) — Benefits and information
+- [Contributing guidelines](contributing.md) — Contribute to other project areas
+- [Dashboard](../index.html) — View how your data appears
+- [About the project](about.md) — Project context and history
 
 Happy updating! 🎉

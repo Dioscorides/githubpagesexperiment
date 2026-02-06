@@ -1,45 +1,34 @@
-# Data Validation Workflow Documentation
+# How we validate data
 
-## Overview
+When you submit changes to the library directory, an automated system checks your data before it's added to the live dashboard. This ensures that all library records are accurate, complete, and formatted correctly.
 
-The Data Guardrails workflow is a GitHub Actions automation that validates the `data.json` file before changes are merged into the main branch. This ensures data quality and prevents schema violations.
+## What the validation system does
 
-## Purpose
+The system performs two levels of checking:
 
-The workflow serves as an automated quality gate that:
+1. **Format check**: Verifies that the data is properly structured
+2. **Content check**: Confirms that all information is complete and correct
 
-- Prevents invalid data from entering the repository
-- Ensures consistency across all manuscript library records
-- Validates schema compliance automatically
-- Reduces manual review burden on maintainers
-- Provides immediate feedback to contributors
+Both checks happen automatically and provide instant feedback through GitHub.
 
-## How It Works
+## When validation runs
 
-### Trigger Conditions
+The system checks your data in two situations:
 
-The workflow runs in two scenarios:
+- **Automatically**: When you submit a pull request that changes the library data
+- **On demand**: When you manually request a validation check from the GitHub Actions tab
 
-1. **Automatic execution**: When a pull request includes changes to `data.json`
-2. **Manual execution**: When triggered from the GitHub Actions tab using the "Run workflow" button
+## How the format check works
 
-### Validation Process
+The first check ensures your data is properly formatted as a JSON file (a structured text format used to store information).
 
-The workflow performs two levels of validation:
+The system verifies:
 
-#### Level 1: JSON Syntax Validation
-
-**Tool**: Python's `json.tool` module
-
-**Purpose**: Verifies that the JSON file is well-formed and parseable.
-
-**What it checks**:
-
-- Proper bracket and brace matching
-- Correct comma placement
-- Valid string escaping
-- No trailing commas
-- Proper encoding (UTF-8)
+- All brackets and braces are correctly matched
+- Commas separate fields properly
+- Text is properly enclosed in quotation marks
+- There are no trailing commas or other syntax errors
+- The file uses standard UTF-8 encoding
 
 !!! failure "Example: Missing comma"
 
@@ -50,6 +39,8 @@ The workflow performs two levels of validation:
     }
     ```
 
+    The system finds the missing comma between fields and alerts you to fix it.
+
 !!! failure "Example: Trailing comma"
 
     ```json
@@ -58,36 +49,36 @@ The workflow performs two levels of validation:
     }
     ```
 
-#### Level 2: Schema Validation
+    Commas should not appear after the last field.
 
-**Tool**: AJV (Another JSON Validator) with format support
+## How the content check works
 
-**Purpose**: Validates that all records conform to the defined schema structure.
+The second check ensures all your data follows the required structure and contains valid information.
 
-**What it checks**:
+The system verifies:
 
-1. **Required Fields**
-   - All 10 required fields are present in every record
-   - No missing `id`, `library`, `nation`, etc.
+1. **All required fields are present**
+   - Every library record must include: ID, name, country, city, website, copyright information, manuscript count, format support, license type, and project information
 
-2. **Data Types**
-   - Strings are strings (not numbers or booleans)
-   - Booleans are true/false (not "true"/"false" strings)
-   - Integers are whole numbers
+2. **Data types are correct**
+   - Text fields contain text (not numbers)
+   - Yes/No fields use true or false (not the words "true" or "false")
+   - Number fields contain whole numbers
 
-3. **Format Validation**
-   - `website` field contains valid URIs
-   - `is_part_of_url` contains valid URIs when present
-   - URIs follow proper format: `scheme://host/path`
+3. **Websites are valid**
+   - Website addresses follow proper format: `https://example.com`
+   - URLs start with `http://` or `https://`
+   - Links are reachable and functional
 
-4. **Conditional Requirements**
-   - When `is_part_of` is `true`, both `is_part_of_project_name` and `is_part_of_url` must be non-null
-   - When `is_part_of` is `false`, project fields can be null
+4. **Relationships are consistent**
+   - When you indicate a library is part of a larger project, you must provide the project name and website
+   - When a library operates independently, project fields must be empty
 
-5. **Enumerated Values**
-   - `quantity` must be one of: "Few", "Dozens", "Hundreds", "Thousands", "Unknown"
+5. **Categories use correct values**
+   - Manuscript counts must be: "Few", "Dozens", "Hundreds", "Thousands", or "Unknown"
+   - No other values are accepted
 
-!!! failure "Example: Schema violations"
+!!! failure "Example: Multiple violations"
 
     ```json
     {
@@ -101,329 +92,255 @@ The workflow performs two levels of validation:
     }
     ```
     
-    **Issues**:
+    **Issues the system finds**:
     
-    - `website`: Invalid URI format
-    - `iiif`: Should be boolean, not string
-    - `quantity`: Not in allowed enum values
+    - `website`: Format is invalid (missing protocol)
+    - `iiif`: Should be true or false, not the word "false"
+    - `quantity`: "Many" is not an allowed value
 
-## Workflow Steps
+## What you see on GitHub
 
-The workflow executes the following steps in sequence:
+After you submit changes, GitHub displays the validation results next to your pull request.
 
-### Step 1: Checkout Code
-```yaml
-- name: Checkout Code
-  uses: actions/checkout@v3
-```
+### Validation passed
 
-**Purpose**: Downloads the repository code to the GitHub Actions runner.
+You see a **green checkmark** (✓) and a **"Passed"** status.
 
-**Why needed**: The workflow needs access to `data.json` and `schema.json` to perform validation.
+This means:
+- Your data format is correct
+- All required information is present
+- Content meets all standards
+- Your pull request can be reviewed and merged
 
-### Step 2: Setup Node.js
-```yaml
-- name: Setup Node.js
-  uses: actions/setup-node@v3
-  with:
-    node-version: '16'
-```
+### Validation failed
 
-**Purpose**: Installs Node.js runtime environment.
+You see a **red X** (✗) and a **"Failed"** status.
 
-**Why needed**: AJV validator is a Node.js package and requires Node.js to run.
+This means:
+- Your data has one or more errors
+- The system cannot process your changes until you fix the issues
+- Click the **"Details"** link to see what's wrong
 
-**Version**: Uses Node.js 16 for stability and compatibility.
+## Reading error messages
 
-### Step 3: Install Validators
-```yaml
-- name: Install Validator & Formats
-  run: npm install -g ajv-cli ajv-formats
-```
+When validation fails, GitHub shows you exactly what needs to be fixed.
 
-**Purpose**: Installs the validation tools.
-
-**Packages installed**:
-- `ajv-cli`: Command-line interface for AJV validator
-- `ajv-formats`: Adds format validation (uri, email, date, etc.)
-
-**Flags**:
-- `-g`: Global installation (available system-wide)
-
-### Step 4: Run Validation
-```yaml
-- name: Validate JSON Syntax & Schema
-  run: |
-    cat data.json | python3 -m json.tool > /dev/null
-    ajv validate -s schema.json -d data.json -c ajv-formats
-```
-
-**Purpose**: Executes the actual validation checks.
-
-**Commands**:
-1. `cat data.json | python3 -m json.tool > /dev/null`
-   - Pipes data.json through Python's JSON parser
-   - Discards output (`> /dev/null`), only checks for errors
-   - Exits with error code if JSON is malformed
-
-2. `ajv validate -s schema.json -d data.json -c ajv-formats`
-   - `-s schema.json`: Specifies the schema file
-   - `-d data.json`: Specifies the data file to validate
-   - `-c ajv-formats`: Enables format validation plugin
-
-## Exit Codes
-
-The workflow uses exit codes to signal success or failure:
-
-- **Exit 0**: All validations passed
-  - Pull request can be merged
-  - Green checkmark appears in GitHub
-  
-- **Exit 1**: Validation failed
-  - Pull request is blocked
-  - Red X appears in GitHub
-  - Error details shown in workflow logs
-
-## Reading Validation Errors
-
-When validation fails, the workflow logs provide detailed error messages.
-
-!!! example "JSON Syntax Error"
+!!! example "Format error"
 
     ```
     Expecting ',' delimiter: line 45 column 3 (char 1234)
     ```
     
-    **Solution**: Add missing comma on line 45.
+    **What it means**: Line 45 is missing a comma.  
+    **How to fix**: Go to line 45 in your data and add a comma between fields.
 
-!!! example "Schema Validation Errors"
+!!! example "Missing field"
 
     ```
     data/123 must have required property 'iiif'
     ```
     
-    **Solution**: Add the missing `iiif` field to record at index 123.
-    
+    **What it means**: Record number 123 is missing the IIIF field.  
+    **How to fix**: Add `"iiif": true` or `"iiif": false` to that record.
+
+!!! example "Invalid website"
+
     ```
     data/456/website must match format "uri"
     ```
     
-    **Solution**: Fix the `website` field in record 456 to be a valid URL.
-    
+    **What it means**: The website address in record 456 is not formatted correctly.  
+    **How to fix**: Ensure the URL starts with `https://` and is a working link. Example: `"website": "https://example.com/manuscripts"`
+
+!!! example "Incomplete project information"
+
     ```
     data/789 must match "then" schema
     data/789/is_part_of_project_name must NOT have fewer than 1 characters
     ```
     
-    **Solution**: Record 789 has `is_part_of: true` but missing or empty `is_part_of_project_name`.
+    **What it means**: Record 789 says it's part of a project but doesn't provide the project name.  
+    **How to fix**: Either provide both the project name and project website, or set the library as independent (`"is_part_of": false`).
 
-## Common Validation Failures
+## Common errors and how to fix them
 
-!!! failure "Missing Required Field"
+### Missing required fields
 
-    ```json
-    {
-      "id": 1,
-      "library": "Example"
-    }
-    ```
-    
-    **Missing**: `nation`, `city`, `website`, `copyright`, `quantity`, `iiif`, `is_free_cultural_works_license`, `is_part_of`
+**Error message**: `must have required property`
 
-!!! failure "Invalid Boolean Type"
+**What went wrong**: You forgot to include one or more required fields.
 
-    ```json
-    {
-      "iiif": "false"
-    }
-    ```
-    
-    **Issue**: String instead of boolean  
-    **Fix**: `"iiif": false`
+**Example**:
+```json
+{
+  "id": 1,
+  "library": "Example"
+}
+```
 
-!!! failure "Invalid URI Format"
+Missing: country, city, website, copyright information, manuscript count, format support, license type, and project information.
 
-    ```json
-    {
-      "website": "www.example.com"
-    }
-    ```
-    
-    **Issue**: Missing protocol  
-    **Fix**: `"website": "https://www.example.com"`
+**How to fix**: Review the [Data Structure Guide](./schema.md) and add all required fields to your record.
 
-!!! failure "Invalid Quantity Value"
+---
 
-    ```json
-    {
-      "quantity": "Some"
-    }
-    ```
-    
-    **Issue**: Not in enum  
-    **Fix**: `"quantity": "Few"` (or "Dozens", "Hundreds", "Thousands", "Unknown")
+### Text written as "true" or "false" instead of true/false
 
-!!! failure "Incomplete Project Information"
+**Error message**: `must be boolean`
 
-    ```json
-    {
-      "is_part_of": true,
-      "is_part_of_project_name": null,
-      "is_part_of_url": null
-    }
-    ```
-    
-    **Issue**: Cannot be null when `is_part_of` is true  
-    **Fix**: Provide both project name and URL, or set `is_part_of: false`
+**What went wrong**: You used quotation marks around true or false, making them text instead of yes/no values.
 
-## Manual Workflow Execution
+**Example**:
+```json
+{
+  "iiif": "false"
+}
+```
 
-To manually trigger the workflow:
+**How to fix**: Remove quotation marks:
+```json
+{
+  "iiif": false
+}
+```
 
-1. Navigate to your repository on GitHub
+---
+
+### Website URL missing the protocol
+
+**Error message**: `must match format "uri"`
+
+**What went wrong**: Your website address doesn't start with `http://` or `https://`.
+
+**Example**:
+```json
+{
+  "website": "www.example.com"
+}
+```
+
+**How to fix**: Add the protocol:
+```json
+{
+  "website": "https://www.example.com"
+}
+```
+
+---
+
+### Manuscript count not in the allowed list
+
+**Error message**: `must be equal to one of the allowed values`
+
+**What went wrong**: You used a value that's not in the approved list.
+
+**Example**:
+```json
+{
+  "quantity": "Some"
+}
+```
+
+Approved values: "Few", "Dozens", "Hundreds", "Thousands", "Unknown"
+
+**How to fix**: Use one of the five approved values:
+```json
+{
+  "quantity": "Dozens"
+}
+```
+
+---
+
+### Project marked as true but no project name provided
+
+**Error message**: `is_part_of_project_name must NOT have fewer than 1 characters`
+
+**What went wrong**: You indicated the library is part of a project but didn't provide the project's name.
+
+**Example**:
+```json
+{
+  "is_part_of": true,
+  "is_part_of_project_name": null,
+  "is_part_of_url": null
+}
+```
+
+**How to fix**: Either provide the project name and website:
+```json
+{
+  "is_part_of": true,
+  "is_part_of_project_name": "Europeana Manuscripts",
+  "is_part_of_url": "https://www.europeana.eu/"
+}
+```
+
+Or mark the library as independent:
+```json
+{
+  "is_part_of": false,
+  "is_part_of_project_name": null,
+  "is_part_of_url": null
+}
+```
+
+## Manual validation check
+
+To run a validation check on demand:
+
+1. Go to your GitHub repository
 2. Click the **Actions** tab
-3. Select **Data Guardrails** from the workflow list
-4. Click **Run workflow** button
-5. Select the branch to test
+3. Find **Data Guardrails** in the workflow list
+4. Click **Run workflow**
+5. Select your branch
 6. Click **Run workflow**
 
-This is useful for:
-- Testing schema changes
-- Validating data before creating a pull request
-- Running validation on-demand without a pull request
+The system checks your data and displays results within 1-2 minutes.
 
-## Integration with Pull Requests
-
-When a pull request modifies `data.json`:
-
-1. Workflow automatically triggers
-2. Validation runs in the background
-3. Results appear as a check in the PR
-4. **Pass**: Green checkmark, PR can be merged
-5. **Fail**: Red X, PR blocked until fixed
-
-### Branch Protection
-
-To enforce validation, configure branch protection rules:
-
-1. Go to repository **Settings** → **Branches**
-2. Add rule for `main` branch
-3. Enable **Require status checks to pass before merging**
-4. Select **Data Guardrails** / **validate-data**
-
-This prevents merging invalid data into the main branch.
-
-## Maintenance
-
-### Updating Node.js Version
-
-To update the Node.js version:
-
-```yaml
-- name: Setup Node.js
-  uses: actions/setup-node@v3
-  with:
-    node-version: '18'
-```
-
-Update the `node-version` value to your desired version.
-
-**Recommendation**: Use LTS (Long-Term Support) versions for stability.
-
-### Updating Actions Versions
-
-Check for updates to GitHub Actions:
-
-```yaml
-- uses: actions/checkout@v4
-- uses: actions/setup-node@v4
-```
-
-For example, update from v3 to v4 when new versions are available.
-
-**Best practice**: Review changelogs before updating to avoid breaking changes.
-
-### Adding Additional Checks
-
-To add more validation steps, append to the validation command:
-
-```yaml
-- name: Validate JSON Syntax & Schema
-  run: |
-    cat data.json | python3 -m json.tool > /dev/null
-    ajv validate -s schema.json -d data.json -c ajv-formats
-    python3 scripts/custom-validation.py data.json
-```
-
-This example shows adding a custom Python validation script.
+**When to use manual validation**:
+- Before submitting a pull request to catch issues early
+- After making changes to schema rules
+- To verify data on a specific branch without a pull request
 
 ## Performance
 
-**Typical execution time**: 20-40 seconds
+**Typical validation time**: 20-40 seconds
 
-**Breakdown**:
-- Checkout code: 5-10 seconds
-- Setup Node.js: 5-10 seconds
-- Install validators: 5-10 seconds
-- Run validation: 5-10 seconds
+**Cost**: Free (included with GitHub)
 
-**Cost**: Free on GitHub Actions (included in free tier)
+## Preventing validation failures
 
-## Troubleshooting
+### Before you submit changes
 
-### Workflow Doesn't Trigger
+1. Review the [Data Structure Guide](./schema.md) to understand all required fields
+2. Check the [Update the Dashboard Data](./update-data.md) guide for step-by-step instructions
+3. Test your website links in a browser before submitting
+4. Verify spelling of library names, cities, and countries
 
-**Check**:
-- Pull request modifies `data.json` file
-- Workflow file exists in `.github/workflows/` folder
-- Workflow file is valid YAML syntax
+### If validation fails
 
-### Validation Passes Locally but Fails in CI
+1. Read the error message carefully—it tells you exactly what's wrong
+2. Click the error details in GitHub to see which record and field have the problem
+3. Compare your data to the examples in the [Data Structure Guide](./schema.md)
+4. Fix the issue and resubmit
+5. Use the manual validation check to verify before creating a new pull request
 
-**Possible causes**:
-- Line ending differences (CRLF vs LF)
-- File encoding issues
-- Different AJV versions
+## Still stuck?
 
-**Solution**: Run `fix-data.js` to normalize the data.
+If you can't figure out the error:
 
-### Cannot Install NPM Packages
+1. Review the "Common errors and how to fix them" section above
+2. Check the [Data Structure Guide](./schema.md) for field requirements
+3. Look at other records in the database to see examples of correct formatting
+4. [Open an issue](https://github.com/Dioscorides/githubpagesexperiment/issues) or contact @DIOSCORIDES for help
 
-**Possible causes**:
-- Network connectivity issues
-- npm registry down
-- Package version conflicts
+## Related documentation
 
-**Solution**: Check GitHub Actions status page or retry workflow.
-
-## Related Files
-
-- `.github/workflows/validate.yml` - The workflow definition
-- `schema.json` - The JSON schema definition
-- `SCHEMA.md` - Schema documentation
-- `data.json` - The validated data file
-- `fix-data.js` - Data cleanup script
-
-## Best Practices
-
-1. **Run `fix-data.js` before committing** to catch issues early
-2. **Test schema changes locally** before updating schema.json
-3. **Keep schema.json and data.json in sync** with documentation
-4. **Review validation errors carefully** before force-pushing fixes
-5. **Update workflow annually** to use latest Action versions
-
-## Support
-
-If validation fails and you cannot determine the cause:
-
-1. Review the workflow logs for detailed error messages
-2. Validate `data.json` locally using the same commands
-3. Check `SCHEMA.md` for field requirements
-4. Consult the schema.json file for exact specifications
-5. Run `fix-data.js` to autocorrect common issues
+- [Data Structure Guide](./schema.md) — Understanding the data fields
+- [Update the Dashboard Data](./update-data.md) — How to add or edit libraries
+- [Contributing Guide](../CONTRIBUTING.md) — Ways to help the project
 
 ---
 
 **Last Updated**: February 6, 2026
-**Workflow Version**: 1.0  
-**Maintained By**: DMMapp Contributors
