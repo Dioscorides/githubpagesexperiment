@@ -4,7 +4,29 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'index.html'
+      - 'script.js'
+      - 'style.css'
+      - 'data.json'
+      - 'robots.txt'
+      - 'llms.txt'
+      - 'assets/**'
+      - '.github/workflows/deploy.yml'
   pull_request:
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'index.html'
+      - 'script.js'
+      - 'style.css'
+      - 'data.json'
+      - 'robots.txt'
+      - 'llms.txt'
+      - 'assets/**'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
@@ -24,13 +46,29 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: '**/requirements*.txt'
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Install MkDocs Material
         run: |
-          pip install mkdocs-material
+          pip install -r requirements.txt
+
+      - name: Validate data.json
+        run: |
+          # Validate JSON syntax
+          python -m json.tool data.json > /dev/null
+          echo "✓ data.json is valid JSON"
 
       - name: Build MkDocs Documentation
         run: |
@@ -40,19 +78,24 @@ jobs:
 
       - name: Copy App Files to dist
         run: |
-          # 1. The Core App
+          # Core app files (required)
           cp index.html dist/
           cp script.js dist/
           cp style.css dist/
           cp data.json dist/
 
-          # 2. SEO & AI Layers
-          # We use '|| true' to prevent errors if these files don't exist yet
-          cp robots.txt dist/ || true
-          cp llms.txt dist/ || true
+          # SEO & AI files (optional)
+          [ -f robots.txt ] && cp robots.txt dist/ || echo "⚠ robots.txt not found, skipping"
+          [ -f llms.txt ] && cp llms.txt dist/ || echo "⚠ llms.txt not found, skipping"
           
-          # 3. Images/Assets
-          cp -r assets dist/ || true
+          # Assets directory (optional)
+          [ -d assets ] && cp -r assets dist/ || echo "⚠ assets/ directory not found, skipping"
+          
+          # Verify core files were copied
+          for file in index.html script.js style.css data.json; do
+            [ -f "dist/$file" ] || { echo "✗ Failed to copy $file"; exit 1; }
+          done
+          echo "✓ All core files copied successfully"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -61,6 +104,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: 'dist'
+          retention-days: 1
 
   deploy:
     environment:
