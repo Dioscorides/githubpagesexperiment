@@ -160,7 +160,7 @@ We welcome contributions! There are several ways to help:
 ### Adding Libraries
 1. **Search First**: Ensure the library isn't already in `data.json`
 2. **Edit `data.json`**: Add your entry following the schema
-3. **Create a Pull Request**: Submit to the `main` branch
+3. **Create a Pull Request**: Submit to the `master` branch
 
 [Detailed Contributing Guide →](./CONTRIBUTING.md)
 
