@@ -7,7 +7,7 @@ Find what you need to get started, contribute, or develop.
 **New to DMMapp?** Start here.
 
 - [Getting started](getting-started.md) — Explore the dashboard and search for libraries
-- [About standardized image formats](standardized-formats.md) — Understand IIIF and related technologies
+- [Data schema](schema.md) — Understand how library data is structured
 
 ## For contributors
 
