@@ -3,7 +3,7 @@ name: Build and Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
   workflow_dispatch:
 
@@ -40,10 +40,19 @@ jobs:
 
       - name: Copy App Files to dist
         run: |
+          # 1. The Core App
           cp index.html dist/
           cp script.js dist/
           cp style.css dist/
           cp data.json dist/
+
+          # 2. SEO & AI Layers
+          # We use '|| true' to prevent errors if these files don't exist yet
+          cp robots.txt dist/ || true
+          cp llms.txt dist/ || true
+          
+          # 3. Images/Assets
+          cp -r assets dist/ || true
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
