@@ -257,8 +257,8 @@ If the dashboard appears broken after approval:
 
 ## Additional resources
 
-- [Data schema](index.md#data-schema) — Field definitions and format details
-- [About standardized image formats](index.md#about-standardized-image-formats) — Benefits and information
+- [Data schema](schema.md) — Field definitions and format details
+- [IIIF field reference](schema.md) — Understand standardized image format support
 - [Contributing guidelines](contributing.md) — Contribute to other project areas
 - [Dashboard](../index.html) — View how your data appears
 - [About the project](about.md) — Project context and history
