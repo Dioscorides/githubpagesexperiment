@@ -34,25 +34,29 @@ The workflow performs two levels of validation:
 **Purpose**: Verifies that the JSON file is well-formed and parseable.
 
 **What it checks**:
+
 - Proper bracket and brace matching
 - Correct comma placement
 - Valid string escaping
 - No trailing commas
 - Proper encoding (UTF-8)
 
-**Example failures**:
-```json
-// Missing comma
-{
-  "library": "Example"
-  "nation": "Country"
-}
+!!! failure "Example: Missing comma"
 
-// Trailing comma
-{
-  "library": "Example",
-}
-```
+    ```json
+    {
+      "library": "Example"
+      "nation": "Country"
+    }
+    ```
+
+!!! failure "Example: Trailing comma"
+
+    ```json
+    {
+      "library": "Example",
+    }
+    ```
 
 #### Level 2: Schema Validation
 
@@ -83,18 +87,25 @@ The workflow performs two levels of validation:
 5. **Enumerated Values**
    - `quantity` must be one of: "Few", "Dozens", "Hundreds", "Thousands", "Unknown"
 
-**Example schema violation**:
-```json
-{
-  "id": 1,
-  "library": "Example Library",
-  "nation": "Country",
-  "city": "City",
-  "website": "not-a-valid-url",  // ❌ Invalid URI format
-  "iiif": "false",                // ❌ Should be boolean, not string
-  "quantity": "Many"              // ❌ Not in allowed enum values
-}
-```
+!!! failure "Example: Schema violations"
+
+    ```json
+    {
+      "id": 1,
+      "library": "Example Library",
+      "nation": "Country",
+      "city": "City",
+      "website": "not-a-valid-url",
+      "iiif": "false",
+      "quantity": "Many"
+    }
+    ```
+    
+    **Issues**:
+    
+    - `website`: Invalid URI format
+    - `iiif`: Should be boolean, not string
+    - `quantity`: Not in allowed enum values
 
 ## Workflow Steps
 
@@ -177,74 +188,93 @@ The workflow uses exit codes to signal success or failure:
 
 When validation fails, the workflow logs provide detailed error messages.
 
-### JSON Syntax Error Example
-```
-Expecting ',' delimiter: line 45 column 3 (char 1234)
-```
-**Solution**: Add missing comma on line 45.
+!!! example "JSON Syntax Error"
 
-### Schema Validation Error Example
-```
-data/123 must have required property 'iiif'
-```
-**Solution**: Add the missing `iiif` field to record at index 123.
+    ```
+    Expecting ',' delimiter: line 45 column 3 (char 1234)
+    ```
+    
+    **Solution**: Add missing comma on line 45.
 
-```
-data/456/website must match format "uri"
-```
-**Solution**: Fix the `website` field in record 456 to be a valid URL.
+!!! example "Schema Validation Errors"
 
-```
-data/789 must match "then" schema
-data/789/is_part_of_project_name must NOT have fewer than 1 characters
-```
-**Solution**: Record 789 has `is_part_of: true` but missing or empty `is_part_of_project_name`.
+    ```
+    data/123 must have required property 'iiif'
+    ```
+    
+    **Solution**: Add the missing `iiif` field to record at index 123.
+    
+    ```
+    data/456/website must match format "uri"
+    ```
+    
+    **Solution**: Fix the `website` field in record 456 to be a valid URL.
+    
+    ```
+    data/789 must match "then" schema
+    data/789/is_part_of_project_name must NOT have fewer than 1 characters
+    ```
+    
+    **Solution**: Record 789 has `is_part_of: true` but missing or empty `is_part_of_project_name`.
 
 ## Common Validation Failures
 
-### Missing Required Field
-```json
-{
-  "id": 1,
-  "library": "Example",
-  // Missing: nation, city, website, copyright, quantity, iiif, 
-  // is_free_cultural_works_license, is_part_of
-}
-```
+!!! failure "Missing Required Field"
 
-### Invalid Boolean Type
-```json
-{
-  "iiif": "false"  // ❌ String instead of boolean
-}
-```
-**Fix**: `"iiif": false`
+    ```json
+    {
+      "id": 1,
+      "library": "Example"
+    }
+    ```
+    
+    **Missing**: `nation`, `city`, `website`, `copyright`, `quantity`, `iiif`, `is_free_cultural_works_license`, `is_part_of`
 
-### Invalid URI Format
-```json
-{
-  "website": "www.example.com"  // ❌ Missing protocol
-}
-```
-**Fix**: `"website": "https://www.example.com"`
+!!! failure "Invalid Boolean Type"
 
-### Invalid Quantity Value
-```json
-{
-  "quantity": "Some"  // ❌ Not in enum
-}
-```
-**Fix**: `"quantity": "Few"` (or "Dozens", "Hundreds", "Thousands", "Unknown")
+    ```json
+    {
+      "iiif": "false"
+    }
+    ```
+    
+    **Issue**: String instead of boolean  
+    **Fix**: `"iiif": false`
 
-### Incomplete Project Information
-```json
-{
-  "is_part_of": true,
-  "is_part_of_project_name": null,  // ❌ Cannot be null when is_part_of is true
-  "is_part_of_url": null
-}
-```
-**Fix**: Provide both project name and URL, or set `is_part_of: false`
+!!! failure "Invalid URI Format"
+
+    ```json
+    {
+      "website": "www.example.com"
+    }
+    ```
+    
+    **Issue**: Missing protocol  
+    **Fix**: `"website": "https://www.example.com"`
+
+!!! failure "Invalid Quantity Value"
+
+    ```json
+    {
+      "quantity": "Some"
+    }
+    ```
+    
+    **Issue**: Not in enum  
+    **Fix**: `"quantity": "Few"` (or "Dozens", "Hundreds", "Thousands", "Unknown")
+
+!!! failure "Incomplete Project Information"
+
+    ```json
+    {
+      "is_part_of": true,
+      "is_part_of_project_name": null,
+      "is_part_of_url": null
+    }
+    ```
+    
+    **Issue**: Cannot be null when `is_part_of` is true  
+    **Fix**: Provide both project name and URL, or set `is_part_of: false`
 
 ## Manual Workflow Execution
 
@@ -293,8 +323,10 @@ To update the Node.js version:
 - name: Setup Node.js
   uses: actions/setup-node@v3
   with:
-    node-version: '18'  # Update this version number
+    node-version: '18'
 ```
+
+Update the `node-version` value to your desired version.
 
 **Recommendation**: Use LTS (Long-Term Support) versions for stability.
 
@@ -303,9 +335,11 @@ To update the Node.js version:
 Check for updates to GitHub Actions:
 
 ```yaml
-- uses: actions/checkout@v4      # Update from v3 to v4
-- uses: actions/setup-node@v4    # Update from v3 to v4
+- uses: actions/checkout@v4
+- uses: actions/setup-node@v4
 ```
+
+For example, update from v3 to v4 when new versions are available.
 
 **Best practice**: Review changelogs before updating to avoid breaking changes.
 
@@ -318,9 +352,10 @@ To add more validation steps, append to the validation command:
   run: |
     cat data.json | python3 -m json.tool > /dev/null
     ajv validate -s schema.json -d data.json -c ajv-formats
-    # Add custom validation script
     python3 scripts/custom-validation.py data.json
 ```
+
+This example shows adding a custom Python validation script.
 
 ## Performance
 
