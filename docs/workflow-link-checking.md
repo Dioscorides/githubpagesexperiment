@@ -17,7 +17,6 @@ The system runs automatically and maintains data quality without requiring manua
 Link checks happen on a predictable schedule:
 
 - **Automatically**: Every Monday at 00:00 UTC (midnight)
-- **On demand**: You can run a check anytime from the GitHub Actions tab
 
 ## How the link checker works
 
@@ -61,34 +60,37 @@ When we find broken links, we automatically create a GitHub Issue with details a
 - Broken links are flagged for review and correction
 - You can prioritize fixes based on impact
 
-The link checker never stops your website or breaks your build—it just notifies you so you can investigate and update the records.
+## How to handle broken links
 
-## How to fix broken links
+When you find a broken link, follow this decision tree to determine the best action:
 
-When you receive a link health issue, follow these steps to resolve it:
+### 1. Fix it
 
-### Step 1: Review the automated report
+Try to find the new URL if the page moved.
 
-1. Go to your GitHub repository
-2. Click the **Issues** tab
-3. Find the issue titled "⚠️ Broken Links Detected in Database"
-4. Read the report to see which URLs failed and why
+- Search for the library name online to locate the current website
+- Check if the library has a new domain or restructured URL
+- Update the `website` field in `data.json` with the correct URL
 
-### Step 2: Investigate each broken link
+### 2. Archive it
 
-Visit the broken URL in your browser to confirm what went wrong:
+If the site is down, check [The Wayback Machine](https://web.archive.org/).
 
-- **404 Not Found**: The page has been removed or moved
-- **Timeout**: The server is running slowly or is temporarily unavailable
-- **Connection refused**: The website may be offline permanently
+- Visit the Wayback Machine and enter the broken URL
+- Look for a recent snapshot of the page and check if digitized manuscripts are visible.
+- If a snapshot exists, use that archived URL in `data.json`
 
-### Step 3: Find the correct information
+### 3. Delete it
 
-**If the library moved to a new URL**:
+If the digitized medieval manuscripts are gone, remove the entry from `data.json`.
 
-1. Search for the library name online
-2. Find the new official website
-3. Update the `website` field in `data.json` with the new URL
+- Verify the library and collection no longer exist online
+- Remove the entire record from the data file
+- Document the reason in your pull request
+
+!!! note "History is safe"
+
+    Don't worry about losing repositories. Git keeps a permanent history of every deleted entry if we ever need to restore it.
 
 !!! example "Example: URL changed"
 
@@ -110,23 +112,6 @@ Visit the broken URL in your browser to confirm what went wrong:
     }
     ```
 
-**If the library is permanently closed**:
-
-1. Add a note to the library name indicating it's no longer active
-2. Consider keeping the record for historical reference or removing it entirely
-3. Document the closure date if available
-
-!!! example "Example: Library closed"
-
-    ```json
-    {
-      "id": 42,
-      "library": "Example Manuscript Library (Closed)",
-      "website": "https://old-domain.edu/manuscripts",
-      "notes": "Collection transferred to National Archives in 2026"
-    }
-    ```
-
 ### Step 4: Submit your fixes
 
 1. Edit `data.json` with the corrected information
@@ -144,13 +129,13 @@ Occasionally, the link checker reports errors for links that actually work. This
 - **Websites block automated tools**: Some servers reject requests from automated checkers
 - **Geographic restrictions**: Sites may block access from certain regions
 - **Rate limiting**: Too many requests in a short time trigger temporary blocks
-- **Authentication required**: Some pages require login before showing content
+- **Authentication required**: Some pages might now require login before showing content
 
 ### How to skip false positives
 
 If you verify a link works but the checker keeps reporting it as broken, you can exclude it from future checks.
 
-**Create a `.lycheeignore` file** in the root of your repository:
+**edit the `.lycheeignore` file** in the root of the DMMapp repository:
 
 ```text
 # Websites that block automated checkers
@@ -173,33 +158,6 @@ https://members-only-archive.org
 
     Only exclude links you've manually verified are working. Don't use this to hide genuinely broken links—fix them instead.
 
-## Run a manual link check
-
-To run a link health check on demand:
-
-1. Go to your GitHub repository
-2. Click the **Actions** tab
-3. Find **Link Health Check** in the workflow list
-4. Click **Run workflow**
-5. Select your branch (usually `main`)
-6. Click **Run workflow**
-
-We'll check all links and show you the results within 2-3 minutes.
-
-**When to use manual checks**:
-- After adding multiple new libraries to verify all URLs work
-- Before a major release to ensure data quality
-- To verify that previously broken links are now fixed
-- After updating links to confirm they pass the check
-
-## Performance
-
-**Typical check time**: 2-5 minutes (depends on number of libraries)
-
-**Frequency**: Weekly (every Monday)
-
-**Cost**: Free (included with GitHub Actions)
-
 ## Prevent broken links
 
 ### Before adding new libraries
@@ -212,7 +170,7 @@ We'll check all links and show you the results within 2-3 minutes.
 ### Best practices
 
 - **Use official URLs**: Link to the library's official domain, not third-party aggregators
-- **Link directly**: Point to the manuscript section rather than a generic homepage
+- **Link directly**: Point to the digitized manuscripts section rather than a generic homepage
 - **Prefer HTTPS**: Secure links are more reliable
 - **Avoid URL shorteners**: Use full URLs so users know where they're going
 - **Check links regularly**: Visit the links you've added to catch problems early
@@ -276,8 +234,3 @@ If you can't resolve a broken link:
 - [Update the Dashboard Data](./update-data.md) — How to edit library information
 - [Data Structure Guide](./schema.md) — Understanding the data fields
 - [How we validate data](./workflow-validation.md) — Automated quality checks
-
----
-
-**Last Updated**: February 6, 2026
-
